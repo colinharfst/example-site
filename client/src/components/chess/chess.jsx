@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import RandomVsRandomGame from "./chess/attempt";
+import RandomVsRandomGame from "./attempt";
 
 export class ChessComp extends Component {
   render() {
@@ -19,7 +19,7 @@ const boardsContainer = {
   justifyContent: "space-around",
   alignItems: "center",
   flexWrap: "wrap",
-  width: "100vw",
+  width: "100%",
   marginTop: 30,
   marginBottom: 50
 };
