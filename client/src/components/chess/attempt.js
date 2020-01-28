@@ -5,12 +5,11 @@ import Chessboard from "chessboardjsx";
 
 // prettier-ignore
 const colinWinning = {
-  gameArray: ['b3', 'd5', 'Bb2', 'c5', 'Nf3', 'Nf6', 'd4', 'e6', 'e3', 'Nc6', 'Bd3', 'Qb6', 'Nbd2',
-    'Bd7', 'O-O', 'Nb4', 'Be2', 'Be7', 'c4', 'dxc4', 'Nxc4', 'Qc7', 'Nce5', 'O-O', 'a3', 'Nc6', 'dxc5',
-    'Bxc5', 'b4','Bb6', 'Nxd7', 'Nxd7', 'Rc1', 'Rad8', 'Bd3', 'Nde5', 'Nxe5'],
+  gameArray: ['Nf3', 'd5', 'b3', 'Nc6', 'Bb2', 'Bg4', 'e3', 'Qd7', 'h3', 'Bh5', 'Be2', 'O-O-O', 'Nd4',
+    'Nxd4', 'Bxd4', 'Bxe2', 'Qxe2', 'f6', 'Bxa7','b6','Qa6#'],
   label: 'A recent win',
   white: 'Colin Harfst',
-  black: 'Theoden52',
+  black: 'letsmateout',
   orientation: 'white',
   winner: 'white'
 };
@@ -76,21 +75,23 @@ class RandomVsRandom extends Component {
   };
 
   render() {
-    const { fen } = this.state;
+    const { fen, gameRandomSeed } = this.state;
     const gameRecord = this.getGameOfRecord(this.state.gameRandomSeed);
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        {this.props.children({ position: fen })}
         <h1>{gameRecord.label}</h1>
-        <h2 style={{ marginBottom: "0" }}>White: {gameRecord.white}</h2>
-        <h2 style={{ marginBottom: "0" }}>Black: {gameRecord.black}</h2>
+        {this.props.children({ position: fen })}
+        {gameRandomSeed > 1 && (
+          <>
+            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>White: {gameRecord.white}</h2>
+            <h2 style={{ marginTop: "20px", marginBottom: "0" }}>Black: {gameRecord.black}</h2>
+          </>
+        )}
       </div>
     );
   }
 }
 
-/* eslint react/display-name: 0 */
-/* eslint react/prop-types: 0 */
 export default function RandomVsRandomGame() {
   return (
     <RandomVsRandom>

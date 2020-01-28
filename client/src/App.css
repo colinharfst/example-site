@@ -26,12 +26,19 @@
 }
 
 @media only screen and (max-width: 500px) {
+  .App-header {
+    max-height: unset;
+  }
   .App-header > nav > ul {
     flex-direction: column !important;
     align-items: flex-start !important;
+    padding: 10px !important;
   }
-  .App-header > nav > ul > li:not:first-child {
-    padding-left: 20px;
+  .App-header > nav > ul > li.nav-welcome {
+    padding-bottom: 10px !important;
+  }
+  .App-header > nav > ul > li:not(.nav-welcome) {
+    padding-left: 10px !important;
   }
 }
 

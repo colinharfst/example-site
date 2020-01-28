@@ -5,10 +5,9 @@ import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import { Home } from "./components/home";
-import { Sample } from "./components/sample";
-import { ChessComp } from "./components/chess/chess";
 import { Judge } from "./components/judge";
 import { Resume } from "./components/resume";
+import { ChessComp } from "./components/chess/chess";
 import { Math } from "./components/math";
 
 const linkStyle = { textDecoration: "none", color: "white" };
@@ -19,15 +18,10 @@ function App() {
       <Router>
         <header className="App-header">
           <nav style={{ width: "100%" }}>
-            <ul style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", padding: "0" }}>
-              <li>
+            <ul style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", margin: "auto 0", padding: "0" }}>
+              <li className="nav-welcome">
                 <Link style={{ ...linkStyle, paddingRight: "24px" }} to="/">
                   --Welcome--
-                </Link>
-              </li>
-              <li>
-                <Link style={linkStyle} to="/sample">
-                  Sample
                 </Link>
               </li>
               <li>
@@ -68,9 +62,6 @@ function App() {
           </Route>
           <Route path="/math">
             <Math />
-          </Route>
-          <Route path="/sample">
-            <Sample />
           </Route>
           <Route path="/">
             <Home />
