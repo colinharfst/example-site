@@ -1,18 +1,18 @@
-This project was developed with a simple create-react-app followed by initializing an express server and connecting to a mongodb cluster.
+This project was developed with a simple create-react-app followed by initializing an express server and connecting to a MongoDB cluster in the cloud.
 
 ## To Develop
 
 To run this project locally, you should do the following:
 
-### `cd client && npm i`
+`cd client && npm i`
 
 This installs the dependencies for our client-side processes.
 
-### `cd .. && npm i`
+`cd .. && npm i`
 
 This installs the dependencies for our server-side processes.
 
-### `npm run dev`
+`npm run dev`
 
 This concurrently builds the front-end and back-end for our application<br />
 The front-end is available at [http://localhost:3000](http://localhost:3000).<br/>

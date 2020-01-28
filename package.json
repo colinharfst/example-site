@@ -1,5 +1,5 @@
 {
-  "name": "example-create-react-app-express",
+  "name": "Colin-Harfst-Personal-Website",
   "version": "1.0.0",
   "scripts": {
     "client": "cd client && yarn start",
@@ -15,5 +15,6 @@
   },
   "devDependencies": {
     "concurrently": "^4.0.1"
-  }
+  },
+  "license": "MIT"
 }
