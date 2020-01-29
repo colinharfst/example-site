@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js";
-import Chessboard from "chessboardjsx";
 
 // prettier-ignore
 const colinWinning = {
@@ -38,7 +37,7 @@ const immortalGame = {
   winner: 'white'
 };
 
-class RandomVsRandom extends Component {
+export class SetRandomGame extends Component {
   static propTypes = { children: PropTypes.func };
 
   state = { fen: "start", gameRandomSeed: -1 };
@@ -78,39 +77,26 @@ class RandomVsRandom extends Component {
     const { fen, gameRandomSeed } = this.state;
     const gameRecord = this.getGameOfRecord(this.state.gameRandomSeed);
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="board-container">
         <h1>{gameRecord.label}</h1>
         {this.props.children({ position: fen })}
+
+        {/* Show both white and black */}
         {gameRandomSeed > 1 && (
           <>
             <h2 style={{ marginTop: "24px", marginBottom: "0" }}>White: {gameRecord.white}</h2>
             <h2 style={{ marginTop: "20px", marginBottom: "0" }}>Black: {gameRecord.black}</h2>
           </>
         )}
+        {/* Show just my name */}
+        {gameRandomSeed <= 1 && gameRecord.orientation === "white" ? (
+          <h2 style={{ marginTop: "24px", marginBottom: "0" }}>White: {gameRecord.white}</h2>
+        ) : (
+          <h2 style={{ marginTop: "24px", marginBottom: "0" }}>Black: {gameRecord.black}</h2>
+        )}
       </div>
     );
   }
 }
 
-export default function RandomVsRandomGame() {
-  return (
-    <RandomVsRandom>
-      {({ position }) => (
-        <Chessboard
-          className="chessboard"
-          width={320}
-          id="random"
-          position={position}
-          // TODO: Figure out how to pass orientation from gameRecord
-          // orientation={gameRecord.orientation}
-          draggable={false}
-          transitionDuration={300}
-          boardStyle={{
-            borderRadius: "5px",
-            boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)"
-          }}
-        />
-      )}
-    </RandomVsRandom>
-  );
-}
+export default SetRandomGame;

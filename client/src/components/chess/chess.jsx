@@ -1,24 +1,32 @@
 import React, { Component } from "react";
-
-import RandomVsRandomGame from "./attempt";
+import SetRandomGame from "./chessGame";
+import Chessboard from "chessboardjsx";
+import "./chess.scss";
 
 export class ChessComp extends Component {
   render() {
     return (
-      <div style={boardsContainer}>
-        <RandomVsRandomGame />
-      </div>
+      <SetRandomGame>
+        {({ position }) => (
+          <Chessboard
+            className="chessboard"
+            width={320}
+            id="random"
+            position={position}
+            // TODO: Figure out how to pass orientation from gameRecord
+            // orientation={gameRecord.orientation}
+            draggable={false}
+            transitionDuration={300}
+            boardStyle={{
+              borderRadius: "5px",
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)"
+            }}
+          />
+        )}
+      </SetRandomGame>
+      // </div>
     );
   }
 }
 
 export default ChessComp;
-
-const boardsContainer = {
-  display: "flex",
-  justifyContent: "space-around",
-  alignItems: "center",
-  flexWrap: "wrap",
-  width: "100%",
-  marginBottom: 50
-};

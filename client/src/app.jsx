@@ -1,6 +1,6 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import logo from "./react-logo.svg";
+import "./app.scss";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -10,44 +10,42 @@ import { Resume } from "./components/resume";
 import { ChessComp } from "./components/chess/chess";
 import { Math } from "./components/math";
 
-const linkStyle = { textDecoration: "none", color: "white" };
-
-function App() {
+export function App() {
   return (
-    <div className="App">
+    <div className="app">
       <Router>
-        <header className="App-header">
+        <header className="app-header">
           <nav style={{ width: "100%" }}>
-            <ul style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", margin: "auto 0", padding: "0" }}>
-              <li className="nav-welcome">
-                <Link style={{ ...linkStyle, paddingRight: "24px" }} to="/">
+            <ul className="app-header-list">
+              <li className="welcome-link">
+                <Link className="link" to="/">
                   --Welcome--
                 </Link>
               </li>
               <li>
-                <Link style={linkStyle} to="/resume">
+                <Link className="link" to="/resume">
                   Resume
                 </Link>
               </li>
               <li>
-                <Link style={linkStyle} to="/judge">
+                <Link className="link" to="/judge">
                   Judge
                 </Link>
               </li>
               <li>
-                <Link style={linkStyle} to="/chess">
+                <Link className="link" to="/chess">
                   Chess
                 </Link>
               </li>
               <li>
-                <Link style={linkStyle} to="/math">
+                <Link className="link" to="/math">
                   Math
                 </Link>
               </li>
             </ul>
           </nav>
 
-          <img src={logo} className="App-logo" alt="logo" style={{ maxWidth: "100px", maxHeight: "100px" }} />
+          <img src={logo} className="app-logo" alt="logo" style={{ maxWidth: "100px", maxHeight: "100px" }} />
         </header>
 
         <Switch>
