@@ -89,11 +89,12 @@ export class SetRandomGame extends Component {
           </>
         )}
         {/* Show just my name */}
-        {gameRandomSeed <= 1 && gameRecord.orientation === "white" ? (
-          <h2 style={{ marginTop: "24px", marginBottom: "0" }}>White: {gameRecord.white}</h2>
-        ) : (
-          <h2 style={{ marginTop: "24px", marginBottom: "0" }}>Black: {gameRecord.black}</h2>
-        )}
+        {gameRandomSeed <= 1 &&
+          (gameRecord.orientation === "white" ? (
+            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>White: {gameRecord.white}</h2>
+          ) : (
+            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>Black: {gameRecord.black}</h2>
+          ))}
       </div>
     );
   }
