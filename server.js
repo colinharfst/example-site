@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const request = require("request");
 
 const MongoClient = require("mongodb").MongoClient;
 // const ObjectID = require("mongodb").ObjectID;
@@ -18,9 +19,17 @@ const DATABASE_NAME = "mlb-player-data";
 let database, collection;
 
 // API calls
-// app.get("/api/hello", (req, res) => {
-//   res.send({ express: "Hello From Express" });
-// });
+app.get("/api/hello", (req, res) => {
+  const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_07/day_16/scoreboard.xml";
+  request(url, function(error, response, body) {
+    console.log(body, typeof body);
+    // find 'nyamlb' in body
+    // console.error("error:", error); // Print the error if one occurred
+    // console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
+    // console.log("body:", body); // Print the HTML for the Google homepage.
+  });
+  res.send({ express: "Hello From Express" });
+});
 
 app.post("/api/world", (req, res) => {
   console.log(req.body);
