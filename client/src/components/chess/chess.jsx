@@ -4,6 +4,10 @@ import Chessboard from "chessboardjsx";
 import "./chess.scss";
 
 export class ChessComp extends Component {
+  componentDidMount() {
+    document.title = "Chess ft. the Immortal Game";
+  }
+
   render() {
     return (
       <SetRandomGame>
