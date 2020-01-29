@@ -12,17 +12,17 @@
     color: white;
     overflow: hidden;
     ul.app-header-list {
-      display: "flex";
-      flex-direction: "row";
-      justify-content: "space-evenly";
-      margin: "auto 0";
-      padding: "0";
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      margin: auto 0;
+      padding: 0;
       li {
         list-style-type: none;
       }
       .link {
-        text-decoration: "none";
-        color: "white";
+        text-decoration: none;
+        color: white;
       }
     }
   }
