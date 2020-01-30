@@ -59,16 +59,12 @@ app.get("/api/yankees-game-data/:gameId", (req, res) => {
   res.send({ hrVal: hrVal });
 });
 
-app.post("/api/world", (req, res) => {
-  res.send(`I received your POST request. This is what you sent me: ${req.body.post}`);
-});
-
-app.get("/api/hr-date/:playerId", (request, response) => {
-  collection.findOne({ playerId: request.params.playerId }, (error, result) => {
+app.get("/api/hr-date/:playerId", (req, res) => {
+  collection.findOne({ playerId: req.params.playerId }, (error, result) => {
     if (error) {
-      return response.status(500).send(error);
+      return res.status(500).send(error);
     }
-    response.send(result);
+    res.send(result);
   });
 });
 
@@ -94,4 +90,8 @@ app.listen(port, () => {
     collection = database.collection("yankees-players");
     console.log("Connected to '" + DATABASE_NAME + "'");
   });
+
+  console.log("\\ o  ");
+  console.log(" ( )>");
+  console.log(" / \\ ");
 });

@@ -11,6 +11,10 @@ import { ChessComp } from "./components/chess/chess";
 import { Math } from "./components/math";
 
 export function App() {
+  console.log("\\ o  ");
+  console.log(" ( )>");
+  console.log(" / \\ ");
+
   return (
     <div className="app">
       <Router>
