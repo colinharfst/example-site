@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const DomParser = require("dom-parser");
 const path = require("path");
 const request = require("request");
 
@@ -13,26 +14,47 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const CONNECTION_URL = "mongodb+srv://personal-site-user:uXuvpHxKOnhFwZtM@mlb-player-data-hmtxj.azure.mongodb.net/test?retryWrites=true&w=majority";
-// const CONNECTION_URL = "mongodb+srv://personal-site-user:8Is6KBRlAqqbViWS@mlb-player-data-haaan.mongodb.net/test?retryWrites=true&w=majority";
 const DATABASE_NAME = "mlb-player-data";
 
 let database, collection;
 
 // API calls
-app.get("/api/hello", (req, res) => {
+app.get("/api/yankees-game-id", (_req, res) => {
   const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_07/day_16/scoreboard.xml";
-  request(url, function(error, response, body) {
-    console.log(body, typeof body);
-    // find 'nyamlb' in body
-    // console.error("error:", error); // Print the error if one occurred
-    // console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
-    // console.log("body:", body); // Print the HTML for the Google homepage.
+  let gameId = null;
+  request(url, (_error, _response, body) => {
+    const parser = new DomParser();
+    const xmlDoc = parser.parseFromString(body, "text/xml");
+    const games = xmlDoc.getElementsByTagName("game");
+
+    games.forEach(game => {
+      // TODO: Check for double headers
+      if (game.attributes[0].value.includes("nyamlb")) {
+        gameId = game.attributes[0].value;
+      }
+    });
   });
-  res.send({ express: "Hello From Express" });
+  res.send({ gameId });
+});
+
+app.get("/api/yankees-game-data", (_req, res) => {
+  const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_07/day_16/gid_2019_07_16_tbamlb_nyamlb_1/boxscore.xml";
+  let hrVal = null;
+  request(url, (_error, _response, body) => {
+    const parser = new DomParser();
+    const xmlDoc = parser.parseFromString(body, "text/xml");
+    const batters = xmlDoc.getElementsByTagName("batter");
+    batters.forEach(batter => {
+      const isJudge = batter.attributes.some(attrib => attrib.value.includes("592450"));
+      if (isJudge) {
+        hrVal = batter.attributes.find(attrib => attrib.name === "hr").value;
+      }
+    });
+  });
+  res.send({ hrVal });
 });
 
 app.post("/api/world", (req, res) => {
-  console.log(req.body);
   res.send(`I received your POST request. This is what you sent me: ${req.body.post}`);
 });
 
@@ -50,7 +72,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 
   // Handle React routing, return all requests to React app
-  app.get("*", function(req, res) {
+  app.get("*", (_req, res) => {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
