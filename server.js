@@ -1,11 +1,11 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const DomParser = require("dom-parser");
 const path = require("path");
 const request = require("request");
-
+const bodyParser = require("body-parser");
+const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
 // const ObjectID = require("mongodb").ObjectID;
+const getDateBreakdown = require("./middleware/date-helper").getDateBreakdown;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,7 +20,9 @@ let database, collection;
 
 // API calls
 app.get("/api/yankees-game-id", (_req, res) => {
-  const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_07/day_16/scoreboard.xml";
+  const date = getDateBreakdown();
+  const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/scoreboard.xml`;
+
   let gameId = null;
   request(url, (_error, _response, body) => {
     const parser = new DomParser();
@@ -34,16 +36,19 @@ app.get("/api/yankees-game-id", (_req, res) => {
       }
     });
   });
-  res.send({ gameId });
+  res.send({ gameId: gameId });
 });
 
-app.get("/api/yankees-game-data", (_req, res) => {
-  const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_07/day_16/gid_2019_07_16_tbamlb_nyamlb_1/boxscore.xml";
+app.get("/api/yankees-game-data/:gameId", (req, res) => {
+  const date = getDateBreakdown();
+  const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/${req.params.gameId}/boxscore.xml`;
+
   let hrVal = null;
   request(url, (_error, _response, body) => {
     const parser = new DomParser();
     const xmlDoc = parser.parseFromString(body, "text/xml");
     const batters = xmlDoc.getElementsByTagName("batter");
+
     batters.forEach(batter => {
       const isJudge = batter.attributes.some(attrib => attrib.value.includes("592450"));
       if (isJudge) {
@@ -51,7 +56,7 @@ app.get("/api/yankees-game-data", (_req, res) => {
       }
     });
   });
-  res.send({ hrVal });
+  res.send({ hrVal: hrVal });
 });
 
 app.post("/api/world", (req, res) => {
