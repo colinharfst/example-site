@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import SetRandomGame from "./chessGame";
 import Chessboard from "chessboardjsx";
 import "./chess.scss";
 
-export class ChessComp extends Component {
+export class ChessComp extends React.Component {
   componentDidMount() {
     document.title = "Chess ft. the Immortal Game";
   }
@@ -28,7 +28,6 @@ export class ChessComp extends Component {
           />
         )}
       </SetRandomGame>
-      // </div>
     );
   }
 }

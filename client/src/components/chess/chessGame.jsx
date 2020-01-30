@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import * as React from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js";
 
@@ -37,7 +37,7 @@ const immortalGame = {
   winner: 'white'
 };
 
-export class SetRandomGame extends Component {
+export class SetRandomGame extends React.Component {
   static propTypes = { children: PropTypes.func };
 
   state = { fen: "start", gameRandomSeed: -1 };

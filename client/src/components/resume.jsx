@@ -1,9 +1,7 @@
 import * as React from "react";
 
 export function Resume() {
-  React.useEffect(() => {
-    document.title = "Resume";
-  }, []);
+  document.title = "Resume";
 
   return (
     <div>

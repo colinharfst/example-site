@@ -1,9 +1,7 @@
 import * as React from "react";
 
 export function Home() {
-  React.useEffect(() => {
-    document.title = "Colin Harfst - Home";
-  }, []);
+  document.title = "Colin Harfst - Home";
 
   return (
     <div>

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import * as React from "react";
 
-export class Sample extends Component {
+export class Sample extends React.Component {
   state = {
     response: "",
     post: "",

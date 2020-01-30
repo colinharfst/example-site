@@ -1,4 +1,5 @@
 import * as React from "react";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export class Judge extends React.Component {
   componentDidMount = async () => {
@@ -8,6 +9,9 @@ export class Judge extends React.Component {
   };
 
   render() {
+    if (true) {
+      return <CircularProgress />;
+    }
     return (
       <div>
         <h2>Here's some judge text</h2>
