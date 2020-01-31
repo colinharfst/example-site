@@ -25,6 +25,7 @@ app.get("/api/yankees-game-id", (_req, res) => {
   const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/scoreboard.xml`;
 
   let gameId = null;
+  let isGameFinal = null;
   request(url, (error, _response, body) => {
     if (error) {
       console.log("Unable to get MLB API game data with error:", error);
@@ -39,19 +40,21 @@ app.get("/api/yankees-game-id", (_req, res) => {
       // TODO: Check for double headers
       if (game.attributes[0].value.includes("nyamlb")) {
         gameId = game.attributes[0].value;
+        isGameFinal = game.attributes[2].value === "FINAL";
       }
     });
-    console.log("gameId", gameId);
-    return res.send({ gameId: gameId });
+    console.log("gameId:", gameId);
+    console.log("isGameFinal:", isGameFinal);
+    return res.send({ gameId: gameId, isGameFinal: isGameFinal });
   });
 });
 
-app.get("/api/yankees-game-data/:gameId", (req, res) => {
+app.get("/api/game-player-data/:gameId/:playerId", (req, res) => {
   const date = getDateBreakdown();
   // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/gid_${req.params.gameId}/boxscore.xml`;
   const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/gid_${req.params.gameId}/boxscore.xml`;
 
-  let hrVal = null;
+  let hrCount = null;
   request(url, (error, _response, body) => {
     if (error) {
       console.log("Unable to get MLB API player data with error:", error);
@@ -63,26 +66,53 @@ app.get("/api/yankees-game-data/:gameId", (req, res) => {
     const batters = xmlDoc.getElementsByTagName("batter");
 
     batters.forEach(batter => {
-      const isJudge = batter.attributes.some(attrib => attrib.value.includes("592450"));
+      const isJudge = batter.attributes.some(attrib => attrib.value.includes(req.params.playerId));
       if (isJudge) {
-        hrVal = batter.attributes.find(attrib => attrib.name === "hr").value;
+        hrCount = batter.attributes.find(attrib => attrib.name === "hr").value;
       }
     });
 
-    console.log("hrVal", hrVal);
-    return res.send({ hrVal: hrVal });
+    console.log("hrCount:", hrCount);
+    return res.send({ hrCount: hrCount });
   });
 });
 
-app.get("/api/hr-date/:playerId", (req, res) => {
+app.get("/api/player-hr/:playerId", (req, res) => {
   collection.findOne({ playerId: req.params.playerId }, (error, result) => {
     if (error) {
       console.log("Unable to find MongoDB player data with error:", error);
       return res.status(500).send(error);
     }
+    console.log("lastHRCount:", result.lastHRCount);
+    console.log("lastHRDate:", result.lastHRDate);
+    console.log("wasHRLastGame:", result.wasHRLastGame);
     return res.send(result);
   });
 });
+
+// Could refactor to PATCH
+app.put("/api/player-hr/:playerId", (req, res) => {
+  // if !(req.body contains lastHRCount, lastHRDate, or  etc. && req.params.playerId has value) return 400;
+  console.log(req.body);
+  collection.updateOne({ playerId: req.params.playerId }, { $set: req.body }, (error, result) => {
+    if (error) {
+      console.log("Unable to update MongoDB player data with error:", error);
+      return res.status(500).send(error);
+    }
+    return res.send(result);
+  });
+});
+
+// app.post("/api/player-hr", (req, res) => {
+//   // if !(req.body contains playerId, lastHRCount, lastHRDate, and wasHRLastGame) return 400;
+//   collection.insertOne(req.body, (error, result) => {
+//     if (error) {
+//       console.log("Unable to insert MongoDB player data with error:", error);
+//       return res.status(500).send(error);
+//     }
+//     return res.send(result);
+//   });
+// });
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
@@ -107,6 +137,6 @@ app.listen(port, () => {
     }
     database = client.db(DATABASE_NAME);
     collection = database.collection("yankees-players");
-    console.log("Connected to '" + DATABASE_NAME + "'");
+    console.log(`Connected to '${DATABASE_NAME}'`);
   });
 });

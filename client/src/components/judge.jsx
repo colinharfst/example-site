@@ -2,32 +2,56 @@ import * as React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 export class Judge extends React.Component {
-  state = { hrVal: null };
+  state = { playerId: "592450", hrCount: null, isGameFinal: null, noGame: null, lastHRCount: null, lastHRDate: null, wasHRLastGame: null };
 
   componentDidMount = async () => {
     document.title = "Aaron Judge Stats";
-    await this.loadTodaysHRCount();
+    await this.loadTodaysHRCount(this.state.playerId);
+    await this.getPlayer(this.state.playerId);
   };
 
-  loadTodaysHRCount = async () => {
-    const gameId = await fetch("/api/yankees-game-id").then(async resp => {
-      const respBody = await resp.json();
-      return respBody.gameId;
+  loadTodaysHRCount = async playerId => {
+    const game = await fetch("/api/yankees-game-id").then(async resp => await resp.json());
+    if (game.gameId) {
+      const hrCount = await fetch(`/api/game-player-data/${game.gameId}/${playerId}`).then(async resp => (await resp.json()).hrCount);
+      this.setState({ hrCount, isGameFinal: game.isGameFinal });
+    } else {
+      this.setState({ noGame: true });
+    }
+  };
+
+  getPlayer = async playerId => {
+    const player = await fetch(`/api/player-hr/${playerId}`).then(async resp => await resp.json());
+    this.setState({ lastHRCount: player.hrCount, lastHRDate: player.lastHRDate, wasHRLastGame: player.wasHRLastGame });
+  };
+
+  updatePlayerHR = async (playerId, hrCount, hrDate) => {
+    await fetch(`/api/player-hr/${playerId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ lastHRCount: hrCount, lastHRDate: hrDate, wasHRLastGame: true })
     });
-    const hrVal = await fetch(`/api/yankees-game-data/${gameId}`).then(async resp => {
-      const respBody = await resp.json();
-      return respBody.hrVal;
+  };
+
+  updatePlayerNoHR = async playerId => {
+    await fetch(`/api/player-hr/${playerId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ wasHRLastGame: false })
     });
-    this.setState({ hrVal });
   };
 
   render() {
-    if (this.state.hrVal === null) {
+    if (this.state.hrCount === null) {
       return <CircularProgress />;
     }
     return (
       <div>
-        <h2>{`Here's some judge text, ${this.state.hrVal}`}</h2>
+        <h2>{`Here's some judge text, ${this.state.hrCount}`}</h2>
       </div>
     );
   }
