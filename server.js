@@ -21,10 +21,16 @@ let database, collection;
 // API calls
 app.get("/api/yankees-game-id", (_req, res) => {
   const date = getDateBreakdown();
-  const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/scoreboard.xml`;
+  // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/scoreboard.xml`;
+  const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/scoreboard.xml`;
 
   let gameId = null;
-  request(url, (_error, _response, body) => {
+  request(url, (error, _response, body) => {
+    if (error) {
+      console.log("Unable to get MLB API game data with error:", error);
+      return res.status(500).send(error);
+    }
+
     const parser = new DomParser();
     const xmlDoc = parser.parseFromString(body, "text/xml");
     const games = xmlDoc.getElementsByTagName("game");
@@ -35,16 +41,23 @@ app.get("/api/yankees-game-id", (_req, res) => {
         gameId = game.attributes[0].value;
       }
     });
+    console.log("gameId", gameId);
+    return res.send({ gameId: gameId });
   });
-  res.send({ gameId: gameId });
 });
 
 app.get("/api/yankees-game-data/:gameId", (req, res) => {
   const date = getDateBreakdown();
-  const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/${req.params.gameId}/boxscore.xml`;
+  // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/gid_${req.params.gameId}/boxscore.xml`;
+  const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/gid_${req.params.gameId}/boxscore.xml`;
 
   let hrVal = null;
-  request(url, (_error, _response, body) => {
+  request(url, (error, _response, body) => {
+    if (error) {
+      console.log("Unable to get MLB API player data with error:", error);
+      return res.status(500).send(error);
+    }
+
     const parser = new DomParser();
     const xmlDoc = parser.parseFromString(body, "text/xml");
     const batters = xmlDoc.getElementsByTagName("batter");
@@ -55,16 +68,19 @@ app.get("/api/yankees-game-data/:gameId", (req, res) => {
         hrVal = batter.attributes.find(attrib => attrib.name === "hr").value;
       }
     });
+
+    console.log("hrVal", hrVal);
+    return res.send({ hrVal: hrVal });
   });
-  res.send({ hrVal: hrVal });
 });
 
 app.get("/api/hr-date/:playerId", (req, res) => {
   collection.findOne({ playerId: req.params.playerId }, (error, result) => {
     if (error) {
+      console.log("Unable to find MongoDB player data with error:", error);
       return res.status(500).send(error);
     }
-    res.send(result);
+    return res.send(result);
   });
 });
 
@@ -74,24 +90,23 @@ if (process.env.NODE_ENV === "production") {
 
   // Handle React routing, return all requests to React app
   app.get("*", (_req, res) => {
-    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+    return res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
 
 // Listen here
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+  console.log("\\ o  ");
+  console.log(" ( )>");
+  console.log(" / \\ ");
+  console.log("Listening on port", port);
   MongoClient.connect(CONNECTION_URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
     if (error) {
-      console.log("MongoDB connection failed with error: ", error);
+      console.log("MongoDB connection failed with error:", error);
       throw error;
     }
     database = client.db(DATABASE_NAME);
     collection = database.collection("yankees-players");
     console.log("Connected to '" + DATABASE_NAME + "'");
   });
-
-  console.log("\\ o  ");
-  console.log(" ( )>");
-  console.log(" / \\ ");
 });
