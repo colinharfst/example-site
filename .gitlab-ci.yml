@@ -1,7 +1,16 @@
 image: node:latest
 
-build_deploy_test:
+stages:
+  - production
+
+production:
+  type: deploy
+  stage: production
+  image: ruby:latest
   script:
-    - cd client && npm i
-    - cd .. && npm i
-    - npm run dev
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=colin-harfst-site --api-key=$HEROKU_API_KEY
+  only:
+    - master
