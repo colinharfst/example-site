@@ -65,7 +65,7 @@ app.get("/api/game-player-data/:gameId/:playerId", (req, res) => {
     const xmlDoc = parser.parseFromString(body, "text/xml");
     const batters = xmlDoc.getElementsByTagName("batter");
 
-    const playerPlayed = false;
+    let playerPlayed = false;
     batters.forEach(batter => {
       const isJudge = batter.attributes.some(attrib => attrib.value.includes(req.params.playerId));
       if (isJudge) {

@@ -1,3 +1,6 @@
+[![travis](https://img.shields.io/travis/standard/eslint-config-standard/master.svg)](https://travis-ci.org/standard/eslint-config-standard)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+
 This project was developed with a simple create-react-app followed by initializing an express server and connecting to a MongoDB cluster in the cloud.
 
 ## To Develop
@@ -21,8 +24,3 @@ The back-end is proxied through [http://localhost:5000/api/](http://localhost:50
 ### Deployment
 
 This app will be deployed through [heroku](www.heroku.com).
-
-#### Misc.
-
-[![travis](https://img.shields.io/travis/standard/eslint-config-standard/master.svg)](https://travis-ci.org/standard/eslint-config-standard)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
