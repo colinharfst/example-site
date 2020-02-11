@@ -1,0 +1,7 @@
+image: node:latest
+
+build_deploy_test:
+  script:
+    - cd client && npm i
+    - cd .. && npm i
+    - npm run dev
