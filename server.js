@@ -19,10 +19,10 @@ const DATABASE_NAME = "mlb-player-data";
 let database, collection;
 
 // API calls
-app.get("/api/yankees-game-id", (_req, res) => {
+app.get("/api/yankees-game", (_req, res) => {
   const date = getDateBreakdown();
   // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/scoreboard.xml`;
-  const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/scoreboard.xml`;
+  const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/scoreboard.xml";
 
   let gameId = null;
   let isGameFinal = null;
@@ -65,15 +65,18 @@ app.get("/api/game-player-data/:gameId/:playerId", (req, res) => {
     const xmlDoc = parser.parseFromString(body, "text/xml");
     const batters = xmlDoc.getElementsByTagName("batter");
 
+    const playerPlayed = false;
     batters.forEach(batter => {
       const isJudge = batter.attributes.some(attrib => attrib.value.includes(req.params.playerId));
       if (isJudge) {
         hrCount = batter.attributes.find(attrib => attrib.name === "hr").value;
+        playerPlayed = true;
       }
     });
 
     console.log("hrCount:", hrCount);
-    return res.send({ hrCount: hrCount });
+    console.log("playerPlayed:", playerPlayed);
+    return res.send({ hrCount: hrCount, playerPlayed: playerPlayed });
   });
 });
 
@@ -85,7 +88,7 @@ app.get("/api/player-hr/:playerId", (req, res) => {
     }
     console.log("lastHRCount:", result.lastHRCount);
     console.log("lastHRDate:", result.lastHRDate);
-    console.log("wasHRLastGame:", result.wasHRLastGame);
+    console.log("wasHRLastGamePlayed:", result.wasHRLastGamePlayed);
     return res.send(result);
   });
 });
@@ -104,7 +107,7 @@ app.put("/api/player-hr/:playerId", (req, res) => {
 });
 
 // app.post("/api/player-hr", (req, res) => {
-//   // if !(req.body contains playerId, lastHRCount, lastHRDate, and wasHRLastGame) return 400;
+//   // if !(req.body contains playerId, lastHRCount, lastHRDate, and wasHRLastGamePlayed) return 400;
 //   collection.insertOne(req.body, (error, result) => {
 //     if (error) {
 //       console.log("Unable to insert MongoDB player data with error:", error);

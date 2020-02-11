@@ -2,7 +2,7 @@ import * as React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 export class Judge extends React.Component {
-  state = { playerId: "592450", hrCount: null, isGameFinal: null, noGame: null, lastHRCount: null, lastHRDate: null, wasHRLastGame: null };
+  state = { playerId: "592450", hrCount: null, isGameFinal: null, noGame: null, playerPlayed: null, lastHRCount: null, lastHRDate: null, wasHRLastGamePlayed: null };
 
   componentDidMount = async () => {
     document.title = "Aaron Judge Stats";
@@ -11,10 +11,10 @@ export class Judge extends React.Component {
   };
 
   loadTodaysHRCount = async playerId => {
-    const game = await fetch("/api/yankees-game-id").then(async resp => await resp.json());
+    const game = await fetch("/api/yankees-game").then(async resp => await resp.json());
     if (game.gameId) {
-      const hrCount = await fetch(`/api/game-player-data/${game.gameId}/${playerId}`).then(async resp => (await resp.json()).hrCount);
-      this.setState({ hrCount, isGameFinal: game.isGameFinal });
+      const gamePlayerData = await fetch(`/api/game-player-data/${game.gameId}/${playerId}`).then(async resp => await resp.json());
+      this.setState({ isGameFinal: game.isGameFinal, hrCount: gamePlayerData.hrCount, playerPlayed: gamePlayerData.playerPlayed });
     } else {
       this.setState({ noGame: true });
     }
@@ -22,7 +22,7 @@ export class Judge extends React.Component {
 
   getPlayer = async playerId => {
     const player = await fetch(`/api/player-hr/${playerId}`).then(async resp => await resp.json());
-    this.setState({ lastHRCount: player.hrCount, lastHRDate: player.lastHRDate, wasHRLastGame: player.wasHRLastGame });
+    this.setState({ lastHRCount: player.hrCount, lastHRDate: player.lastHRDate, wasHRLastGamePlayed: player.wasHRLastGamePlayed });
   };
 
   updatePlayerHR = async (playerId, hrCount, hrDate) => {
@@ -31,7 +31,7 @@ export class Judge extends React.Component {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ lastHRCount: hrCount, lastHRDate: hrDate, wasHRLastGame: true })
+      body: JSON.stringify({ lastHRCount: hrCount, lastHRDate: hrDate, wasHRLastGamePlayed: true })
     });
   };
 
@@ -41,7 +41,7 @@ export class Judge extends React.Component {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ wasHRLastGame: false })
+      body: JSON.stringify({ wasHRLastGamePlayed: false })
     });
   };
 
@@ -49,6 +49,13 @@ export class Judge extends React.Component {
     if (this.state.hrCount === null) {
       return <CircularProgress />;
     }
+    //  if no game
+    //    if DB says hr in last game
+    //    if DB says no hr in last game played
+    //  if game not final
+    //    if hit hr anyway
+    //    if DB says hr in last game
+    //    if DB says no hr in last game played
     return (
       <div>
         <h2>{`Here's some judge text, ${this.state.hrCount}`}</h2>
