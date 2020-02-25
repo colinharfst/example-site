@@ -4,11 +4,13 @@ import "./app.scss";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-import { Home } from "./components/home";
-import { Judge } from "./components/judge";
-import { Resume } from "./components/resume";
+import { Home } from "./components/home/home";
+import { Judge } from "./components/baseball/judge";
+import { Resume } from "./components/resume/resume";
 import { ChessComp } from "./components/chess/chess";
-import { Math } from "./components/math";
+import { Math } from "./components/math/math";
+import { Writing } from "./components/writing/writing";
+import { Maps } from "./components/maps/maps";
 
 export function App() {
   console.log("\\ o  ");
@@ -32,8 +34,13 @@ export function App() {
                 </Link>
               </li>
               <li>
-                <Link className="link" to="/judge">
-                  Judge
+                <Link className="link" to="/math">
+                  Math
+                </Link>
+              </li>
+              <li>
+                <Link className="link" to="/baseball">
+                  Baseball
                 </Link>
               </li>
               <li>
@@ -43,7 +50,12 @@ export function App() {
               </li>
               <li>
                 <Link className="link" to="/math">
-                  Math
+                  Writing
+                </Link>
+              </li>
+              <li>
+                <Link className="link" to="/math">
+                  Maps
                 </Link>
               </li>
             </ul>
@@ -56,7 +68,7 @@ export function App() {
           <Route path="/resume">
             <Resume />
           </Route>
-          <Route path="/judge">
+          <Route path="/baseball">
             <Judge />
           </Route>
           <Route path="/chess">
@@ -64,6 +76,12 @@ export function App() {
           </Route>
           <Route path="/math">
             <Math />
+          </Route>
+          <Route path="/writing">
+            <Writing />
+          </Route>
+          <Route path="/maps">
+            <Maps />
           </Route>
           <Route path="/">
             <Home />

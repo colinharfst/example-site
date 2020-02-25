@@ -1,0 +1,26 @@
+.pdf-wrapper {
+  height: calc(100vh - 90px);
+  .research {
+    height: 100%;
+  }
+}
+
+// Alternatively
+.react-pdf__Page {
+  position: relative;
+  z-index: -1;
+  top: -60px;
+}
+
+.react-pdf__Page__canvas {
+  margin: auto;
+  // Preserve ratio
+  width: 459px !important;
+  height: 594px !important;
+  zoom: 125%;
+}
+
+.react-pdf__Page__textContent {
+  // Because I'm not a maniac
+  display: none;
+}

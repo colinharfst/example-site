@@ -53,6 +53,7 @@ app.get("/api/game-player-data/:gameId/:playerId", (req, res) => {
   const date = getDateBreakdown();
   // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/gid_${req.params.gameId}/boxscore.xml`;
   const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/gid_${req.params.gameId}/boxscore.xml`;
+  // const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/master_scoreboard.xml`;
 
   let hrCount = null;
   request(url, (error, _response, body) => {
