@@ -95,7 +95,7 @@ export class Judge extends React.Component {
         if (wasHRLastGamePlayed) {
           return (
             <div>
-              <h1>No</h1>
+              <h1>YES</h1>
               <h2>{`${playerName} didn't play today, but he homered in his last game played on ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}.`}</h2>
               <button onClick={this.props.changePlayer}>
                 <ArrowRightIcon />
@@ -113,6 +113,28 @@ export class Judge extends React.Component {
           </div>
         );
       }
+      if (wasHRLastGamePlayed) {
+        return (
+          <div>
+            <h1>YES</h1>
+            <h2>{`The ${teamName} haven't finished playing yet today, but ${playerName} homered in his last game played on ${lastHRDate}. He hit ${lastHRCount} home run${
+              lastHRCount > 1 ? "s" : ""
+            }.`}</h2>
+            <button onClick={this.props.changePlayer}>
+              <ArrowRightIcon />
+            </button>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <h1>No</h1>
+          <h2>{`The ${teamName} haven't finished playing yet today, but ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}`}</h2>
+          <button onClick={this.props.changePlayer}>
+            <ArrowRightIcon />
+          </button>
+        </div>
+      );
     }
     if (wasHRLastGamePlayed) {
       return (
@@ -128,7 +150,7 @@ export class Judge extends React.Component {
     return (
       <div>
         <h1>No</h1>
-        <h2>{`The ${teamName} didn't play today and ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}`}</h2>
+        <h2>{`The ${teamName} didn't play today, but ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}`}</h2>
         <button onClick={this.props.changePlayer}>
           <ArrowRightIcon />
         </button>

@@ -19,8 +19,8 @@ This installs the dependencies for our server-side processes.
 
 This concurrently builds the front-end and back-end for our application<br />
 The front-end is available at [http://localhost:3000](http://localhost:3000).<br/>
-The back-end is proxied through [http://localhost:5000/api/](http://localhost:5000/api/hello).
+The back-end is proxied through [http://localhost:5000/api/](http://localhost:5000/api/game/nyamlb).
 
 ### Deployment
 
-This app will be deployed through [heroku](www.heroku.com).
+This app will be deployed through [GitLab CI](https://gitlab.com/colinharfst/example-site) and [Heroku](https://www.heroku.com).
