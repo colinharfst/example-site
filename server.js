@@ -19,10 +19,10 @@ const DATABASE_NAME = "mlb-player-data";
 let database, collection;
 
 // API calls
-app.get("/api/yankees-game", (_req, res) => {
+app.get("/api/game/:team", (req, res) => {
   const date = getDateBreakdown();
-  // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/scoreboard.xml`;
-  const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/scoreboard.xml";
+  const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/scoreboard.xml`;
+  // const url = "http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/scoreboard.xml";
 
   let gameId = null;
   let isGameFinal = null;
@@ -38,7 +38,7 @@ app.get("/api/yankees-game", (_req, res) => {
 
     games.forEach(game => {
       // TODO: Check for double headers
-      if (game.attributes[0].value.includes("nyamlb")) {
+      if (game.attributes[0].value.includes(req.params.team)) {
         gameId = game.attributes[0].value;
         isGameFinal = game.attributes[2].value === "FINAL";
       }
@@ -51,9 +51,8 @@ app.get("/api/yankees-game", (_req, res) => {
 
 app.get("/api/game-player-data/:gameId/:playerId", (req, res) => {
   const date = getDateBreakdown();
-  // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/gid_${req.params.gameId}/boxscore.xml`;
-  const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/gid_${req.params.gameId}/boxscore.xml`;
-  // const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/master_scoreboard.xml`;
+  const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/gid_${req.params.gameId}/boxscore.xml`;
+  // const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/gid_${req.params.gameId}/boxscore.xml`;
 
   let hrCount = null;
   request(url, (error, _response, body) => {
@@ -80,6 +79,27 @@ app.get("/api/game-player-data/:gameId/:playerId", (req, res) => {
     return res.send({ hrCount: hrCount, playerPlayed: playerPlayed });
   });
 });
+
+// app.get("/api/master-scorecard", (_req, res) => {
+//   const date = getDateBreakdown();
+//   // const url = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/master_scoreboard.xml`
+//   const url = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_12/master_scoreboard.xml`;
+
+//   let gameId = null;
+//   let isGameFinal = null;
+//   request(url, (error, _response, body) => {
+//     if (error) {
+//       console.log("Unable to get MLB API game data with error:", error);
+//       return res.status(500).send(error);
+//     }
+
+//     const parser = new DomParser();
+//     const xmlDoc = parser.parseFromString(body, "text/xml");
+//     // console.log("get mlb", xmlDoc);
+//     const games = xmlDoc.getElementsByTagName("game");
+//     ...
+//     const status = games.getElementsByTagName('status');
+// });
 
 app.get("/api/player-hr/:playerId", (req, res) => {
   collection.findOne({ playerId: req.params.playerId }, (error, result) => {

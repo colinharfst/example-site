@@ -5,7 +5,7 @@ import "./app.scss";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import { Home } from "./components/home/home";
-import { Judge } from "./components/baseball/judge";
+import { Baseball } from "./components/baseball/baseball";
 import { Resume } from "./components/resume/resume";
 import { ChessComp } from "./components/chess/chess";
 import { Math } from "./components/math/math";
@@ -69,7 +69,7 @@ export function App() {
             <Resume />
           </Route>
           <Route path="/baseball">
-            <Judge />
+            <Baseball />
           </Route>
           <Route path="/chess">
             <ChessComp />
