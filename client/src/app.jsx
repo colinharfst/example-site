@@ -48,7 +48,7 @@ export function App() {
                   Chess
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link className="link" to="/math">
                   Writing
                 </Link>
@@ -57,7 +57,7 @@ export function App() {
                 <Link className="link" to="/math">
                   Maps
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </nav>
 
