@@ -9,11 +9,7 @@ export function Resume() {
     <div className="pdf-wrapper">
       <object className="resume" data={resume} type="application/pdf" width="100%">
         <h2>
-          Look{" "}
-          <a href={resume} target="_blank" rel="noopener noreferrer">
-            here
-          </a>{" "}
-          if the PDF isn't loading on your device
+          Look <a href={resume}>here</a> if my resume isn't showing on your device
         </h2>
       </object>
     </div>

@@ -14,11 +14,7 @@ export function Math() {
     <div className="pdf-wrapper">
       <object className="research" data={research} type="application/pdf" width="100%">
         <h2>
-          Look{" "}
-          <a href={research} target="_blank" rel="noopener noreferrer">
-            here
-          </a>{" "}
-          if the PDF isn't loading on your device
+          Look <a href={research}>here</a> if my research isn't showing on your device
         </h2>
       </object>
     </div>

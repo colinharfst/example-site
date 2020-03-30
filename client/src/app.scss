@@ -1,6 +1,19 @@
 .app {
   text-align: center;
 
+  h1 {
+    color: #282c34;
+    font-size: calc(14px + 2vmin); // 32px default
+  }
+  h2 {
+    color: #282c34;
+    font-size: calc(10px + 2vmin); // 24px default
+  }
+  h3 {
+    color: #282c34;
+    font-size: calc(10px + 1vmin); // 18px default
+  }
+
   .app-header {
     background-color: #282c34;
     min-height: 50%;
@@ -19,6 +32,7 @@
       padding: 0;
       li {
         list-style-type: none;
+        white-space: nowrap;
       }
       .link {
         text-decoration: none;
@@ -35,7 +49,7 @@
     }
   }
 
-  @media only screen and (max-width: 500px) {
+  @media only screen and (max-width: 675px) {
     .app-header {
       max-height: unset;
       nav {
