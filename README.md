@@ -1,5 +1,5 @@
-[![travis](https://img.shields.io/travis/standard/eslint-config-standard/master.svg)](https://travis-ci.org/standard/eslint-config-standard)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![build-passing-badge](https://img.shields.io/travis/standard/eslint-config-standard/master.svg)](https://gitlab.com/colinharfst/example-site)
+[![js-standard-style-badge](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 This project was developed with a simple create-react-app followed by initializing an express server and connecting to a MongoDB cluster in the cloud.
 
