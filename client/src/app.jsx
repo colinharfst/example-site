@@ -61,7 +61,7 @@ export function App() {
             </ul>
           </nav>
 
-          <img src={logo} className="app-logo" alt="logo" style={{ maxWidth: "100px", maxHeight: "100px" }} />
+          <img src={logo} className="app-logo" alt="logo" />
         </header>
 
         <Switch>
