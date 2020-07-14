@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const request = require("request");
+const fs = require("fs");
 const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
@@ -13,7 +14,8 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const CONNECTION_URL = "mongodb+srv://personal-site-user:uXuvpHxKOnhFwZtM@mlb-player-data-hmtxj.azure.mongodb.net/test?retryWrites=true&w=majority";
+const CONNECTION_URL =
+  "mongodb+srv://personal-site-user:uXuvpHxKOnhFwZtM@mlb-player-data-hmtxj.azure.mongodb.net/test?retryWrites=true&w=majority";
 const DATABASE_NAME = "mlb-player-data";
 
 let database, collection;
@@ -36,7 +38,7 @@ app.get("/api/game/:team", (req, res) => {
     const xmlDoc = parser.parseFromString(body, "text/xml");
     const games = xmlDoc.getElementsByTagName("game");
 
-    games.forEach(game => {
+    games.forEach((game) => {
       // TODO: Check for double headers
       if (game.attributes[0].value.includes(req.params.team)) {
         gameId = game.attributes[0].value;
@@ -66,10 +68,13 @@ app.get("/api/game-player-data/:gameId/:playerId", (req, res) => {
     const batters = xmlDoc.getElementsByTagName("batter");
 
     let playerPlayed = false;
-    batters.forEach(batter => {
-      const isJudge = batter.attributes.some(attrib => attrib.value.includes(req.params.playerId));
+    batters.forEach((batter) => {
+      const isJudge = batter.attributes.some((attrib) =>
+        attrib.value.includes(req.params.playerId)
+      );
       if (isJudge) {
-        hrCount = batter.attributes.find(attrib => attrib.name === "hr").value;
+        hrCount = batter.attributes.find((attrib) => attrib.name === "hr")
+          .value;
         playerPlayed = true;
       }
     });
@@ -118,13 +123,17 @@ app.get("/api/player-hr/:playerId", (req, res) => {
 app.put("/api/player-hr/:playerId", (req, res) => {
   // if !(req.body contains lastHRCount, lastHRDate, or  etc. && req.params.playerId has value) return 400;
   console.log(req.body);
-  collection.updateOne({ playerId: req.params.playerId }, { $set: req.body }, (error, result) => {
-    if (error) {
-      console.log("Unable to update MongoDB player data with error:", error);
-      return res.status(500).send(error);
+  collection.updateOne(
+    { playerId: req.params.playerId },
+    { $set: req.body },
+    (error, result) => {
+      if (error) {
+        console.log("Unable to update MongoDB player data with error:", error);
+        return res.status(500).send(error);
+      }
+      return res.send(result);
     }
-    return res.send(result);
-  });
+  );
 });
 
 // app.post("/api/player-hr", (req, res) => {
@@ -137,6 +146,19 @@ app.put("/api/player-hr/:playerId", (req, res) => {
 //     return res.send(result);
 //   });
 // });
+
+app.get("/api/chess-data", (_req, res) => {
+  fs.readFile("manual-data/lichess-data.txt", (error, data) => {
+    if (error) {
+      console.log("Unable to retrieve chess data", error);
+      return res.status(500).send(error);
+    }
+    data = data.toString().split("\n\n\n");
+
+    console.log(data[0]);
+    return res.send(data);
+  });
+});
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
@@ -154,13 +176,17 @@ app.listen(port, () => {
   console.log(" ( )>");
   console.log(" / \\ ");
   console.log("Listening on port", port);
-  MongoClient.connect(CONNECTION_URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
-    if (error) {
-      console.log("MongoDB connection failed with error:", error);
-      throw error;
+  MongoClient.connect(
+    CONNECTION_URL,
+    { useUnifiedTopology: true, useNewUrlParser: true },
+    (error, client) => {
+      if (error) {
+        console.log("MongoDB connection failed with error:", error);
+        throw error;
+      }
+      database = client.db(DATABASE_NAME);
+      collection = database.collection("yankees-players");
+      console.log(`Connected to '${DATABASE_NAME}'`);
     }
-    database = client.db(DATABASE_NAME);
-    collection = database.collection("yankees-players");
-    console.log(`Connected to '${DATABASE_NAME}'`);
-  });
+  );
 });
