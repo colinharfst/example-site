@@ -8,6 +8,7 @@ import { Home } from "./components/home/home";
 import { Baseball } from "./components/baseball/baseball";
 import { Resume } from "./components/resume/resume";
 import { ChessComp } from "./components/chess/chess";
+import { ChessData } from "./components/chess/chess-data";
 import { Math } from "./components/math/math";
 import { Writing } from "./components/writing/writing";
 import { Maps } from "./components/maps/maps";
@@ -50,7 +51,7 @@ export function App() {
                     <Link className="link" to="/chess">
                       Games
                     </Link>
-                    <Link className="link" to="/chess2">
+                    <Link className="link" to="/chess-data">
                       Data
                     </Link>
                   </div>
@@ -81,6 +82,9 @@ export function App() {
           </Route>
           <Route path="/chess">
             <ChessComp />
+          </Route>
+          <Route path="/chess-data">
+            <ChessData />
           </Route>
           <Route path="/math">
             <Math />

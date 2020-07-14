@@ -1,5 +1,5 @@
 import * as React from "react";
-import SetRandomGame from "./chessGame";
+import SetRandomGame from "./chess-game";
 import Chessboard from "chessboardjsx";
 import "./chess.scss";
 
