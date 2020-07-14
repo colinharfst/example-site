@@ -23,7 +23,6 @@
     align-items: center;
     font-size: calc(10px + 2vmin);
     color: white;
-    overflow: hidden;
     nav {
       ul.app-header-list {
         display: flex;
@@ -34,17 +33,28 @@
         li {
           list-style-type: none;
           white-space: nowrap;
-        }
-        .link {
-          text-decoration: none;
-          color: white;
-          -o-transition: 0.25s;
-          -ms-transition: 0.25s;
-          -moz-transition: 0.25s;
-          -webkit-transition: 0.25s;
-          transition: 0.25s;
-          &:hover {
-            color: #61dafb;
+          .link {
+            text-decoration: none;
+            color: white;
+            -o-transition: 0.25s;
+            -ms-transition: 0.25s;
+            -moz-transition: 0.25s;
+            -webkit-transition: 0.25s;
+            transition: 0.25s;
+            position: relative;
+            &:hover {
+              color: #61dafb;
+              .sublinks {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                background: red;
+              }
+            }
+            .sublinks {
+              display: none;
+            }
           }
         }
       }

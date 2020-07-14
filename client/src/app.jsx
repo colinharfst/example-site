@@ -44,9 +44,17 @@ export function App() {
                 </Link>
               </li>
               <li>
-                <Link className="link" to="/chess">
+                <span className="link">
                   Chess
-                </Link>
+                  <div className="sublinks">
+                    <Link className="link" to="/chess">
+                      Games
+                    </Link>
+                    <Link className="link" to="/chess2">
+                      Data
+                    </Link>
+                  </div>
+                </span>
               </li>
               {/* <li>
                 <Link className="link" to="/math">
