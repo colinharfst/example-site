@@ -12,6 +12,7 @@ import { ChessData } from "./components/chess/chess-data";
 import { Math } from "./components/math/math";
 import { Writing } from "./components/writing/writing";
 import { Maps } from "./components/maps/maps";
+import { Icons } from "./components/widgets/icons";
 
 export function App() {
   console.log("\\ o  ");
@@ -99,6 +100,7 @@ export function App() {
             <Home />
           </Route>
         </Switch>
+        <Icons />
       </Router>
     </div>
   );
