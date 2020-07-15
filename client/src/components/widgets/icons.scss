@@ -1,13 +1,30 @@
-.icons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  margin: 0 0 20px 20px;
-  width: 84px;
-  a {
-    height: 36px;
+.app {
+  .icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 0 0 20px 20px;
+    width: 84px;
+    a {
+      height: 36px;
+    }
+  }
+  &.dark-mode {
+    .icons {
+      a:first-of-type {
+        svg {
+          fill: white;
+        }
+      }
+      a:last-of-type {
+        svg {
+          background-color: white;
+          border-radius: 8px;
+        }
+      }
+    }
   }
 }

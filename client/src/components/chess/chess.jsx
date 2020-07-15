@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import SetRandomGame from "./chess-game";
 import Chessboard from "chessboardjsx";
 import "./chess.scss";
@@ -23,7 +23,7 @@ export class ChessComp extends React.Component {
             transitionDuration={300}
             boardStyle={{
               borderRadius: "5px",
-              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)"
+              boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)",
             }}
           />
         )}

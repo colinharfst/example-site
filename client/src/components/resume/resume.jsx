@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import resume from "./resume-2020.pdf";
 import "./resume.scss";
 
@@ -7,9 +7,15 @@ export function Resume() {
 
   return (
     <div className="pdf-wrapper">
-      <object className="resume" data={resume} type="application/pdf" width="100%">
+      <object
+        className="resume"
+        data={resume}
+        type="application/pdf"
+        width="100%"
+      >
         <h2>
-          Look <a href={resume}>here</a> if my resume isn't showing on your device
+          Look <a href={resume}>here</a> if my resume isn't showing on your
+          device
         </h2>
       </object>
     </div>

@@ -24,7 +24,6 @@ export function ChessData() {
   return (
     <div>
       <h3>Chess Data Incoming.</h3>
-      {/* {gameData && gameData[0].elo} */}
     </div>
   );
 }
