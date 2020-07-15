@@ -1,6 +1,15 @@
 .app {
   text-align: center;
-
+  overflow-x: hidden;
+  min-height: 100vh; // Why is this here?
+  &.dark-mode {
+    background-color: #050505;
+    h1,
+    h2,
+    h3 {
+      color: whitesmoke;
+    }
+  }
   h1 {
     color: #282c34;
     font-size: calc(14px + 2vmin); // 32px default
@@ -12,87 +21,5 @@
   h3 {
     color: #282c34;
     font-size: calc(10px + 1vmin); // 18px default
-  }
-
-  .app-header {
-    background-color: #050505;
-    min-height: 50%;
-    max-height: 90px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-    overflow: hidden;
-    nav {
-      ul.app-header-list {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin: 0 12% 0 40px;
-        padding: 0;
-        li {
-          list-style-type: none;
-          white-space: nowrap;
-        }
-        .link {
-          text-decoration: none;
-          color: white;
-          -o-transition: 0.25s;
-          -ms-transition: 0.25s;
-          -moz-transition: 0.25s;
-          -webkit-transition: 0.25s;
-          transition: 0.25s;
-          &:hover {
-            color: #61dafb;
-          }
-        }
-      }
-    }
-    .app-logo {
-      max-height: 90px;
-      max-width: 90px;
-      height: 40vmin;
-      pointer-events: none;
-    }
-  }
-
-  @media only screen and (max-width: 675px) {
-    .app-header {
-      max-height: unset;
-      nav {
-        ul.app-header-list {
-          flex-direction: column;
-          align-items: flex-start;
-          margin: 0;
-          padding: 10px;
-          li.welcome-link {
-            padding-bottom: 10px;
-          }
-          li:not(.welcome-link) {
-            padding-left: 10px;
-          }
-        }
-      }
-      .app-logo {
-        max-height: 100px;
-        max-width: 100px;
-      }
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .app-logo {
-      animation: app-logo-spin infinite 20s linear;
-    }
-  }
-
-  @keyframes app-logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
   }
 }

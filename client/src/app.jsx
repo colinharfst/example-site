@@ -1,16 +1,19 @@
-import * as React from "react";
-import logo from "./react-logo.svg";
+import React from "react";
 import "./app.scss";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+import { Header } from "./components/header/header";
 import { Home } from "./components/home/home";
 import { Baseball } from "./components/baseball/baseball";
 import { Resume } from "./components/resume/resume";
 import { ChessComp } from "./components/chess/chess";
+import { ChessData } from "./components/chess/chess-data";
 import { Math } from "./components/math/math";
 import { Writing } from "./components/writing/writing";
 import { Maps } from "./components/maps/maps";
+import { Icons } from "./components/widgets/icons";
+import { DarkMode } from "./components/widgets/dark-mode";
 
 export function App() {
   console.log("\\ o  ");
@@ -20,50 +23,7 @@ export function App() {
   return (
     <div className="app">
       <Router>
-        <header className="app-header">
-          <nav style={{ width: "100%" }}>
-            <ul className="app-header-list">
-              <li className="welcome-link">
-                <Link className="link" to="/">
-                  --Welcome--
-                </Link>
-              </li>
-              <li>
-                <Link className="link" to="/resume">
-                  Resume
-                </Link>
-              </li>
-              <li>
-                <Link className="link" to="/math">
-                  Math
-                </Link>
-              </li>
-              <li>
-                <Link className="link" to="/baseball">
-                  Baseball
-                </Link>
-              </li>
-              <li>
-                <Link className="link" to="/chess">
-                  Chess
-                </Link>
-              </li>
-              {/* <li>
-                <Link className="link" to="/math">
-                  Writing
-                </Link>
-              </li>
-              <li>
-                <Link className="link" to="/math">
-                  Maps
-                </Link>
-              </li> */}
-            </ul>
-          </nav>
-
-          <img src={logo} className="app-logo" alt="logo" />
-        </header>
-
+        <Header />
         <Switch>
           <Route path="/resume">
             <Resume />
@@ -73,6 +33,9 @@ export function App() {
           </Route>
           <Route path="/chess">
             <ChessComp />
+          </Route>
+          <Route path="/chess-data">
+            <ChessData />
           </Route>
           <Route path="/math">
             <Math />
@@ -88,6 +51,8 @@ export function App() {
           </Route>
         </Switch>
       </Router>
+      <Icons />
+      <DarkMode />
     </div>
   );
 }

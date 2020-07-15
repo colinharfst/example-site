@@ -1,42 +1,78 @@
-import * as React from "react";
+import React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 export class Judge extends React.Component {
-  state = { hrCount: null, isGameFinal: null, isGameToday: null, playerPlayed: null, lastHRCount: null, lastHRDate: null, wasHRLastGamePlayed: null };
+  state = {
+    hrCount: null,
+    isGameFinal: null,
+    isGameToday: null,
+    playerPlayed: null,
+    lastHRCount: null,
+    lastHRDate: null,
+    wasHRLastGamePlayed: null,
+  };
 
   componentDidMount = async () => {
-    document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
+    document.title =
+      this.props.playerId === "592450"
+        ? "Aaron Judge Stats"
+        : "Cheater José Altuve Stats";
     await this.loadTodaysHRCount(this.props.playerId);
     await this.getPlayer(this.props.playerId);
   };
 
-  componentDidUpdate = async prevProps => {
+  componentDidUpdate = async (prevProps) => {
     if (this.props.playerId !== prevProps.playerId) {
-      this.setState({ hrCount: null, isGameFinal: null, isGameToday: null, playerPlayed: null, lastHRCount: null, lastHRDate: null, wasHRLastGamePlayed: null });
-      document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
+      this.setState({
+        hrCount: null,
+        isGameFinal: null,
+        isGameToday: null,
+        playerPlayed: null,
+        lastHRCount: null,
+        lastHRDate: null,
+        wasHRLastGamePlayed: null,
+      });
+      document.title =
+        this.props.playerId === "592450"
+          ? "Aaron Judge Stats"
+          : "Cheater José Altuve Stats";
       await this.loadTodaysHRCount(this.props.playerId);
       await this.getPlayer(this.props.playerId);
     }
   };
 
-  loadTodaysHRCount = async playerId => {
+  loadTodaysHRCount = async (playerId) => {
     // Alternatively
     // const game = await fetch("/api/master-scorecard").then(async resp => await resp.json());
-    const game = await fetch(`/api/game/${this.props.playerId === "592450" ? "nyamlb" : "houmlb"}`).then(async resp => await resp.json());
+    const game = await fetch(
+      `/api/game/${this.props.playerId === "592450" ? "nyamlb" : "houmlb"}`
+    ).then(async (resp) => await resp.json());
     if (game.gameId) {
       this.setState({ isGameToday: true });
-      const gamePlayerData = await fetch(`/api/game-player-data/${game.gameId}/${playerId}`).then(async resp => await resp.json());
-      this.setState({ isGameFinal: game.isGameFinal, hrCount: parseInt(gamePlayerData.hrCount) || null, playerPlayed: gamePlayerData.playerPlayed });
+      const gamePlayerData = await fetch(
+        `/api/game-player-data/${game.gameId}/${playerId}`
+      ).then(async (resp) => await resp.json());
+      this.setState({
+        isGameFinal: game.isGameFinal,
+        hrCount: parseInt(gamePlayerData.hrCount) || null,
+        playerPlayed: gamePlayerData.playerPlayed,
+      });
       console.log("loadHRCount", this.state);
     } else {
       this.setState({ isGameToday: false });
     }
   };
 
-  getPlayer = async playerId => {
-    const player = await fetch(`/api/player-hr/${playerId}`).then(async resp => await resp.json());
-    this.setState({ lastHRCount: player.lastHRCount, lastHRDate: this.getDateString(player.lastHRDate), wasHRLastGamePlayed: player.wasHRLastGamePlayed });
+  getPlayer = async (playerId) => {
+    const player = await fetch(`/api/player-hr/${playerId}`).then(
+      async (resp) => await resp.json()
+    );
+    this.setState({
+      lastHRCount: player.lastHRCount,
+      lastHRDate: this.getDateString(player.lastHRDate),
+      wasHRLastGamePlayed: player.wasHRLastGamePlayed,
+    });
     console.log("getPlayer", this.state);
   };
 
@@ -60,9 +96,22 @@ export class Judge extends React.Component {
   //   });
   // };
 
-  getDateString = date => {
+  getDateString = (date) => {
     const d = new Date(date);
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
     return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   };
 
@@ -94,7 +143,15 @@ export class Judge extends React.Component {
 
   render() {
     const { playerName, teamName } = this.props;
-    const { isGameToday, isGameFinal, playerPlayed, hrCount, wasHRLastGamePlayed, lastHRDate, lastHRCount } = this.state;
+    const {
+      isGameToday,
+      isGameFinal,
+      playerPlayed,
+      hrCount,
+      wasHRLastGamePlayed,
+      lastHRDate,
+      lastHRCount,
+    } = this.state;
 
     if (isGameToday === null || lastHRCount === null) {
       return <CircularProgress style={{ margin: "40px", color: "#282c34" }} />;
@@ -106,7 +163,9 @@ export class Judge extends React.Component {
           <div>
             {this.renderPlayerQuestion()}
             <h1 className="yes-text">YES</h1>
-            <h2>{`${playerName} hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""} today!`}</h2>
+            <h2>{`${playerName} hit ${lastHRCount} home run${
+              lastHRCount > 1 ? "s" : ""
+            } today!`}</h2>
             {this.renderNextPlayerButton()}
           </div>
         );
@@ -117,7 +176,9 @@ export class Judge extends React.Component {
             <div>
               {this.renderPlayerQuestion()}
               <h1 className="no-text">No</h1>
-              <h2>{`${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}.`}</h2>
+              <h2>{`${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${
+                lastHRCount > 1 ? "s" : ""
+              }.`}</h2>
               {this.renderNextPlayerButton()}
             </div>
           );
@@ -127,7 +188,9 @@ export class Judge extends React.Component {
             <div>
               {this.renderPlayerQuestion()}
               <h1 className="yes-text">YES</h1>
-              <h2>{`${playerName} didn't play today, but he homered in his last game played on ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}.`}</h2>
+              <h2>{`${playerName} didn't play today, but he homered in his last game played on ${lastHRDate}. He hit ${lastHRCount} home run${
+                lastHRCount > 1 ? "s" : ""
+              }.`}</h2>
               {this.renderNextPlayerButton()}
             </div>
           );
@@ -136,7 +199,9 @@ export class Judge extends React.Component {
           <div>
             {this.renderPlayerQuestion()}
             <h1 className="no-text">No</h1>
-            <h2>{`${playerName} didn't play today and he hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}.`}</h2>
+            <h2>{`${playerName} didn't play today and he hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${
+              lastHRCount > 1 ? "s" : ""
+            }.`}</h2>
             {this.renderNextPlayerButton()}
           </div>
         );
@@ -157,7 +222,9 @@ export class Judge extends React.Component {
         <div>
           {this.renderPlayerQuestion()}
           <h1 className="no-text">No</h1>
-          <h2>{`The ${teamName} haven't finished playing yet today, but ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}.`}</h2>
+          <h2>{`The ${teamName} haven't finished playing yet today, but ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${
+            lastHRCount > 1 ? "s" : ""
+          }.`}</h2>
           {this.renderNextPlayerButton()}
         </div>
       );
@@ -167,7 +234,9 @@ export class Judge extends React.Component {
         <div>
           {this.renderPlayerQuestion()}
           <h1 className="yes-text">YES</h1>
-          <h2>{`The ${teamName} didn't play today, but ${playerName} homered in his last game played on ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}.`}</h2>
+          <h2>{`The ${teamName} didn't play today, but ${playerName} homered in his last game played on ${lastHRDate}. He hit ${lastHRCount} home run${
+            lastHRCount > 1 ? "s" : ""
+          }.`}</h2>
           {this.renderNextPlayerButton()}
         </div>
       );
@@ -176,7 +245,9 @@ export class Judge extends React.Component {
       <div>
         {this.renderPlayerQuestion()}
         <h1 className="no-text">No</h1>
-        <h2>{`The ${teamName} didn't play today, but ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""}.`}</h2>
+        <h2>{`The ${teamName} didn't play today, but ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${
+          lastHRCount > 1 ? "s" : ""
+        }.`}</h2>
         {this.renderNextPlayerButton()}
       </div>
     );

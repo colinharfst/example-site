@@ -1,0 +1,14 @@
+.MuiSwitch-root.dark-mode-switch {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 0 8px 8px 0;
+  .MuiSwitch-colorSecondary.Mui-checked {
+    color: #047695;
+    opacity: 1;
+  }
+  .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
+    background-color: #61dafb;
+    opacity: 1;
+  }
+}
