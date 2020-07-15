@@ -148,14 +148,35 @@ app.put("/api/player-hr/:playerId", (req, res) => {
 // });
 
 app.get("/api/chess-data", (_req, res) => {
-  fs.readFile("manual-data/lichess-data.txt", (error, data) => {
+  // https://lichess.org/api/games/user/cph5wr
+  fs.readFile("manual-data/lichess-data.txt", "utf-8", (error, data) => {
     if (error) {
       console.log("Unable to retrieve chess data", error);
       return res.status(500).send(error);
     }
-    data = data.toString().split("\n\n\n");
-
-    console.log(data[0]);
+    data = data.split("\n\n\n");
+    data = data.reverse().map((game) => {
+      if (!game) return;
+      lines = game.split("\n");
+      if (!lines[0].includes("Rated Blitz game")) return;
+      if (lines[3].includes('White "cph5wr"')) {
+        const elo =
+          parseInt(lines[8].substring(11, 15)) +
+          parseInt(lines[10].split('"')[1]);
+        const date = lines[6].substring(10, 20);
+        const time = lines[7].substring(10, 18);
+        return { elo, date, time };
+      } else {
+        const elo =
+          parseInt(lines[9].substring(11, 15)) +
+          parseInt(lines[11].split('"')[1]);
+        const date = lines[6].substring(10, 20);
+        const time = lines[7].substring(10, 18);
+        return { elo, date, time };
+      }
+    });
+    data = data.filter((obj) => obj != undefined);
+    console.log(data[0], data[1], data[1200]);
     return res.send(data);
   });
 });

@@ -63,6 +63,9 @@
               border-radius: 4px;
               padding: 0 8px 4px 8px;
               z-index: 1;
+              .link {
+                font-size: calc(10px + 1.5vmin);
+              }
             }
           }
         }
