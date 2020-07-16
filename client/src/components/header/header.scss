@@ -6,7 +6,6 @@
   }
   .app-header {
     background-color: #050505;
-    min-height: 50%;
     max-height: 90px;
     display: flex;
     flex-direction: row;
@@ -49,8 +48,7 @@
               flex-direction: column;
               align-items: flex-start;
               background-color: #050505;
-              border: #047695 solid 1.5px;
-              // border: #61dafb solid 1.5px;
+              border: 1.5px solid #047695;
               border-radius: 4px;
               padding: 0 8px 4px 8px;
               z-index: 1;
@@ -79,6 +77,8 @@
           align-items: flex-start;
           margin: 0;
           padding: 10px;
+          // Related to factor of 1.35 in math.scss and resume.scss
+          line-height: 1.35;
           li.welcome-link {
             padding-bottom: 10px;
           }

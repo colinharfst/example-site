@@ -1,26 +1,33 @@
-.pdf-wrapper {
-  height: calc(100vh - 91.5px);
-  .research {
-    height: 100%;
+.app {
+  .research-pdf-wrapper {
+    height: calc(100vh - 91.5px);
+    .research {
+      height: 100%;
+    }
+    h3 {
+      margin-top: 0;
+      padding-top: 1em;
+    }
+    img {
+      width: 45vw;
+      height: auto;
+      border: 1.5px solid black;
+      border-radius: 4px;
+      margin: 0 4px 16px 4px;
+    }
   }
-}
-
-// Alternatively
-.react-pdf__Page {
-  position: relative;
-  z-index: -1;
-  top: -60px;
-}
-
-.react-pdf__Page__canvas {
-  margin: auto;
-  // Preserve ratio
-  width: 459px !important;
-  height: 594px !important;
-  zoom: 125%;
-}
-
-.react-pdf__Page__textContent {
-  // Because I'm not a maniac
-  display: none;
+  &.dark-mode {
+    img {
+      border-color: #047695;
+    }
+  }
+  @media only screen and (max-width: 675px) {
+    .research-pdf-wrapper {
+      // Related to line-height of 1.35 in header.scss
+      height: calc(100vh - (1.35 * (50px + 10vmin)) - 31.5px);
+      img {
+        width: 65vw;
+      }
+    }
+  }
 }

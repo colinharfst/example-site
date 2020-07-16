@@ -1,22 +1,23 @@
 import React from "react";
-import resume from "./resume-2020.pdf";
 import "./resume.scss";
+import resume from "./resume-2020.pdf";
+import resumeImg from "./resume-2020.png";
 
 export function Resume() {
   document.title = "Resume";
 
   return (
-    <div className="pdf-wrapper">
+    <div className="resume-pdf-wrapper">
       <object
         className="resume"
         data={resume}
         type="application/pdf"
         width="100%"
       >
-        <h2>
-          Look <a href={resume}>here</a> if my resume isn't showing on your
-          device
-        </h2>
+        <h3>Click the image below to download my resume.</h3>
+        <a href={resume}>
+          <img src={resumeImg} alt="resume" />
+        </a>
       </object>
     </div>
   );
