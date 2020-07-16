@@ -14,12 +14,9 @@ export class Judge extends React.Component {
   };
 
   componentDidMount = async () => {
-    document.title =
-      this.props.playerId === "592450"
-        ? "Aaron Judge Stats"
-        : "Cheater José Altuve Stats";
-    await this.loadTodaysHRCount(this.props.playerId);
-    await this.getPlayer(this.props.playerId);
+    document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
+    await Promise.all([this.getLiveData(), this.getStoredData()]);
+    console.log(this.state);
   };
 
   componentDidUpdate = async (prevProps) => {
@@ -33,68 +30,29 @@ export class Judge extends React.Component {
         lastHRDate: null,
         wasHRLastGamePlayed: null,
       });
-      document.title =
-        this.props.playerId === "592450"
-          ? "Aaron Judge Stats"
-          : "Cheater José Altuve Stats";
-      await this.loadTodaysHRCount(this.props.playerId);
-      await this.getPlayer(this.props.playerId);
+      document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
+      await Promise.all([this.getLiveData(), this.getStoredData()]);
+      console.log(this.state);
     }
   };
 
-  loadTodaysHRCount = async (playerId) => {
-    // Alternatively
-    // const game = await fetch("/api/master-scorecard").then(async resp => await resp.json());
-    const game = await fetch(
-      `/api/game/${this.props.playerId === "592450" ? "nyamlb" : "houmlb"}`
+  getLiveData = async () => {
+    const liveData = await fetch(
+      `/api/live-baseball/${this.props.playerId === "592450" ? "nyamlb" : "houmlb"}/${this.props.playerId}`
     ).then(async (resp) => await resp.json());
-    if (game.gameId) {
-      this.setState({ isGameToday: true });
-      const gamePlayerData = await fetch(
-        `/api/game-player-data/${game.gameId}/${playerId}`
-      ).then(async (resp) => await resp.json());
-      this.setState({
-        isGameFinal: game.isGameFinal,
-        hrCount: parseInt(gamePlayerData.hrCount) || null,
-        playerPlayed: gamePlayerData.playerPlayed,
-      });
-      console.log("loadHRCount", this.state);
-    } else {
-      this.setState({ isGameToday: false });
-    }
+    this.setState({ ...liveData });
   };
 
-  getPlayer = async (playerId) => {
-    const player = await fetch(`/api/player-hr/${playerId}`).then(
+  getStoredData = async () => {
+    const storedData = await fetch(`/api/stored-baseball/${this.props.playerId}`).then(
       async (resp) => await resp.json()
     );
     this.setState({
-      lastHRCount: player.lastHRCount,
-      lastHRDate: this.getDateString(player.lastHRDate),
-      wasHRLastGamePlayed: player.wasHRLastGamePlayed,
+      lastHRCount: storedData.lastHRCount,
+      lastHRDate: this.getDateString(storedData.lastHRDate),
+      wasHRLastGamePlayed: storedData.wasHRLastGamePlayed,
     });
-    console.log("getPlayer", this.state);
   };
-
-  // updatePlayerHR = async (playerId, hrCount, hrDate) => {
-  //   await fetch(`/api/player-hr/${playerId}`, {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({ lastHRCount: hrCount, lastHRDate: hrDate, wasHRLastGamePlayed: true })
-  //   });
-  // };
-
-  // updatePlayerNoHR = async playerId => {
-  //   await fetch(`/api/player-hr/${playerId}`, {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({ wasHRLastGamePlayed: false })
-  //   });
-  // };
 
   getDateString = (date) => {
     const d = new Date(date);
@@ -163,9 +121,7 @@ export class Judge extends React.Component {
           <div>
             {this.renderPlayerQuestion()}
             <h1 className="yes-text">YES</h1>
-            <h2>{`${playerName} hit ${lastHRCount} home run${
-              lastHRCount > 1 ? "s" : ""
-            } today!`}</h2>
+            <h2>{`${playerName} hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""} today!`}</h2>
             {this.renderNextPlayerButton()}
           </div>
         );
