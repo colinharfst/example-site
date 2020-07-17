@@ -6,7 +6,6 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
-// const ObjectID = require("mongodb").ObjectID;
 const getDateBreakdown = require("./middleware/date-helper").getDateBreakdown;
 
 const app = express();
@@ -15,19 +14,15 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const CONNECTION_URL =
-  "mongodb+srv://personal-site-user:uXuvpHxKOnhFwZtM@mlb-player-data-hmtxj.azure.mongodb.net/test?retryWrites=true&w=majority";
-const DATABASE_NAME = "mlb-player-data";
-
-let database, collection;
+let collection;
 
 // API calls
 app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const date = getDateBreakdown();
-  // const url = http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/master_scoreboard.xml
-  const scoreboardUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/scoreboard.xml`;
-  // const scoreboardUrl = "http://gd2.mlb.com/components/game/mlb/year_2019/month_09/day_12/scoreboard.xml";
-  // const scoreboardUrl = "http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/scoreboard.xml";
+  // 09/12/2019 for last double-header
+  // 10/13/2019 for last homerun
+  // Consider using master_scoreboard.xml
+  const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
 
   let isGameToday = false;
   let isGameFinal = false; // Second game of double header, if applicable (assuming games appear in order)
@@ -35,7 +30,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   let hrCount = 0;
 
   // Get league data
-  const body = await requestPromise(scoreboardUrl).catch((error) => {
+  const body = await requestPromise(baseUrl + "/scoreboard.xml").catch((error) => {
     console.log("Unable to get MLB API league data with error:", error);
     return res.status(500).send(error);
   });
@@ -54,13 +49,8 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       gameId = game.attributes[0].value;
       isGameFinal = game.attributes[2].value === "FINAL";
 
-      // const url = http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/master_scoreboard.xml
-      const boxscoreUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}/gid_${gameId}/boxscore.xml`;
-      // const boxscoreUrl = `http://gd2.mlb.com/components/game/mlb/year_2019/month_09/day_12/gid_${gameId}/boxscore.xml`;
-      // const boxscoreUrl = `http://gd2.mlb.com/components/game/mlb/year_2019/month_10/day_13/gid_${gameId}/boxscore.xml`;
-
       // Get game data
-      const gameBody = await requestPromise(boxscoreUrl).catch((error) => {
+      const gameBody = await requestPromise(baseUrl + "/boxscore.xml").catch((error) => {
         console.log("Unable to get MLB API game data with error:", error);
         return res.status(500).send(error);
       });
@@ -173,15 +163,19 @@ app.listen(port, () => {
   console.log(" ( )>");
   console.log(" / \\ ");
   console.log("Listening on port", port);
-  MongoClient.connect(CONNECTION_URL, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
-    if (error) {
-      console.log("MongoDB connection failed with error:", error);
-      throw error;
+  MongoClient.connect(
+    "mongodb+srv://personal-site-user:uXuvpHxKOnhFwZtM@mlb-player-data-hmtxj.azure.mongodb.net/test?retryWrites=true&w=majority",
+    { useUnifiedTopology: true, useNewUrlParser: true },
+    (error, client) => {
+      if (error) {
+        console.log("MongoDB connection failed with error:", error);
+        throw error;
+      }
+      const database = client.db("mlb-player-data");
+      collection = database.collection("yankees-players");
+      console.log("Connected to MongoDB");
     }
-    database = client.db(DATABASE_NAME);
-    collection = database.collection("yankees-players");
-    console.log(`Connected to '${DATABASE_NAME}'`);
-  });
+  );
   request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
     if (error) {
       console.log("Lichess connection failed with error:", error);
