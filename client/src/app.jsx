@@ -5,11 +5,11 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Header } from "./components/header/header";
 import { Home } from "./components/home/home";
-import { Baseball } from "./components/baseball/baseball";
 import { Resume } from "./components/resume/resume";
+import { Math } from "./components/math/math";
+import { Baseball } from "./components/baseball/baseball";
 import { ChessComp } from "./components/chess/chess";
 import { ChessData } from "./components/chess/chess-data";
-import { Math } from "./components/math/math";
 import { Writing } from "./components/writing/writing";
 import { Maps } from "./components/maps/maps";
 import { Icons } from "./components/widgets/icons";
@@ -28,6 +28,9 @@ export function App() {
           <Route path="/resume">
             <Resume />
           </Route>
+          <Route path="/math">
+            <Math />
+          </Route>
           <Route path="/baseball">
             <Baseball />
           </Route>
@@ -36,9 +39,6 @@ export function App() {
           </Route>
           <Route path="/chess-data">
             <ChessData />
-          </Route>
-          <Route path="/math">
-            <Math />
           </Route>
           <Route path="/writing">
             <Writing />
