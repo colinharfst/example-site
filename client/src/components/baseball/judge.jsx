@@ -76,9 +76,9 @@ export class Judge extends React.Component {
   renderPlayerQuestion = () => {
     const { playerId } = this.props;
     if (playerId === "592450") {
-      return <h1>Did Aaron Judge homer?</h1>;
+      return <h1>Did the honorable Aaron Judge homer?</h1>;
     }
-    return <h1>Did José Altuve homer?</h1>;
+    return <h1>Did notorious cheater José Altuve homer?</h1>;
   };
 
   renderNextPlayerButton = () => {
@@ -201,7 +201,7 @@ export class Judge extends React.Component {
       <div>
         {this.renderPlayerQuestion()}
         <h1 className="no-text">No</h1>
-        <h2>{`The ${teamName} didn't play today, but ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${
+        <h2>{`The ${teamName} didn't play today and ${playerName} hasn't hit a homer since ${lastHRDate}. He hit ${lastHRCount} home run${
           lastHRCount > 1 ? "s" : ""
         }.`}</h2>
         {this.renderNextPlayerButton()}

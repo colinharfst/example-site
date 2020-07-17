@@ -50,7 +50,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       isGameFinal = game.attributes[2].value === "FINAL";
 
       // Get game data
-      const gameBody = await requestPromise(baseUrl + "/boxscore.xml").catch((error) => {
+      const gameBody = await requestPromise(baseUrl + `/gid_${gameId}/boxscore.xml`).catch((error) => {
         console.log("Unable to get MLB API game data with error:", error);
         return res.status(500).send(error);
       });

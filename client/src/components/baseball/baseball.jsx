@@ -9,7 +9,7 @@ export function Baseball() {
   const switchPlayers = () => {
     if (playerName === "Judge") {
       setPlayerId("514888");
-      setPlayerName("Notorious Cheater José Altuve");
+      setPlayerName("Altuve");
       setTeamName("Astr*s");
     } else {
       setPlayerId("592450");
