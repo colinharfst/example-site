@@ -37,6 +37,9 @@ export function App() {
           <Route path="/chess">
             <ChessComp />
           </Route>
+          <Route path="/chess-game/:datetime">
+            <ChessComp />
+          </Route>
           <Route path="/chess-data">
             <ChessData />
           </Route>

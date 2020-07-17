@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./chess-data.scss";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, LineMarkSeries } from "react-vis";
+import { useHistory } from "react-router-dom";
 
 export function ChessData() {
   document.title = "Chess Data";
+  const history = useHistory();
 
   const [gameData, setGameData] = useState(null);
   const [xAxisTicks, setXAxisTicks] = useState([]);
@@ -27,7 +29,7 @@ export function ChessData() {
       const dateStr = game.date.split(".");
       const timeStr = game.time.split(":");
       return {
-        x: new Date(dateStr[0], dateStr[1], dateStr[2], timeStr[0], timeStr[1], timeStr[2]),
+        x: new Date(dateStr[0], dateStr[1] - 1, dateStr[2], timeStr[0], timeStr[1], timeStr[2]),
         y: game.elo,
       };
     });
@@ -38,10 +40,10 @@ export function ChessData() {
     const year = new Date().getFullYear();
     const dateAxisTicks = [];
     for (let yr = 2018; yr <= year; yr++) {
-      for (let month = 1; month < 12; month += 2) {
-        const beginRangeConstraint = !(yr === 2018 && month < 7);
-        const endRangeConstraint = !(yr === year && month > new Date().getMonth() + 1);
-        const sizeConstraint = viewWidth <= 675 ? month % 4 !== 1 : true;
+      for (let month = 0; month < 12; month += 2) {
+        const beginRangeConstraint = !(yr === 2018 && month < 6);
+        const endRangeConstraint = !(yr === year && month > new Date().getMonth());
+        const sizeConstraint = viewWidth <= 675 ? month % 4 !== 2 : true;
         if (beginRangeConstraint && endRangeConstraint && sizeConstraint) {
           dateAxisTicks.push(new Date(yr, month, 1).valueOf()); // Using valueOf() to supress warning regarding invalid prop type
         }
@@ -54,7 +56,7 @@ export function ChessData() {
     return <CircularProgress style={{ margin: "40px", color: "#282c34" }} />;
   }
   return (
-    <div>
+    <div className="chess-data">
       <h3>Chess Data Incoming.</h3>
       <XYPlot width={vw} height={400} yDomain={[1100, 1600]} margin={{ left: 45, right: 20, top: 10, bottom: 40 }}>
         <XAxis
@@ -75,7 +77,12 @@ export function ChessData() {
             // console.log(value, innerX, index);
           }}
           onValueClick={(datapoint, event) => {
-            // console.log("cliccckk", datapoint);
+            const offset = new Date().getTimezoneOffset() * 60000;
+            const correctedISOTime = new Date(datapoint.x - offset).toISOString();
+            console.log("cliccckk", correctedISOTime);
+            history.push(`/chess-game/${correctedISOTime}`);
+            // console.log("cliccckk", datapoint.x.toLocaleString("en-US", { timeZone: "America/New_York" }));
+            // history.push(`/chess-game/${datapoint.x.toLocaleString("en-US", { timeZone: "America/New_York" })}`);
           }}
         />
       </XYPlot>

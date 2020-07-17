@@ -44,10 +44,13 @@ export class SetRandomGame extends React.Component {
 
   componentDidMount() {
     this.game = new Chess();
-    const gameRandomSeed = Math.floor(Math.random() * 3);
-    this.setState({ gameRandomSeed });
-    const gameRecord = this.getGameOfRecord(gameRandomSeed);
-    setTimeout(() => this.makeNextRandomMove(gameRecord.gameArray, 0), 650);
+    if (this.props.setGame) {
+    } else {
+      const gameRandomSeed = Math.floor(Math.random() * 3);
+      this.setState({ gameRandomSeed });
+      const gameRecord = this.getGameOfRecord(gameRandomSeed);
+      setTimeout(() => this.makeMoves(gameRecord.gameArray, 0), 650);
+    }
   }
 
   getGameOfRecord = (gameRandomSeed) => {
@@ -61,7 +64,7 @@ export class SetRandomGame extends React.Component {
     }
   };
 
-  makeNextRandomMove = (gameMoves, index) => {
+  makeMoves = (gameMoves, index) => {
     let possibleMoves = this.game.moves();
 
     // exit if the game is over
@@ -76,7 +79,7 @@ export class SetRandomGame extends React.Component {
     this.game.move(gameMoves[index]);
     this.setState({ fen: this.game.fen() });
 
-    setTimeout(() => this.makeNextRandomMove(gameMoves, index + 1), 650);
+    setTimeout(() => this.makeMoves(gameMoves, index + 1), 650);
   };
 
   render() {
@@ -90,24 +93,16 @@ export class SetRandomGame extends React.Component {
         {/* Show both white and black */}
         {gameRandomSeed > 1 && (
           <>
-            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>
-              White: {gameRecord.white}
-            </h2>
-            <h2 style={{ marginTop: "20px", marginBottom: "0" }}>
-              Black: {gameRecord.black}
-            </h2>
+            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>White: {gameRecord.white}</h2>
+            <h2 style={{ marginTop: "20px", marginBottom: "0" }}>Black: {gameRecord.black}</h2>
           </>
         )}
         {/* Show just my name */}
         {gameRandomSeed <= 1 &&
           (gameRecord.orientation === "white" ? (
-            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>
-              White: {gameRecord.white}
-            </h2>
+            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>White: {gameRecord.white}</h2>
           ) : (
-            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>
-              Black: {gameRecord.black}
-            </h2>
+            <h2 style={{ marginTop: "24px", marginBottom: "0" }}>Black: {gameRecord.black}</h2>
           ))}
       </div>
     );

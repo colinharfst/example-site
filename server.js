@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
 const getDateBreakdown = require("./middleware/date-helper").getDateBreakdown;
+const areArraysEqual = require("./middleware/array-helper").areArraysEqual;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -143,6 +144,60 @@ app.get("/api/chess-data", async (_req, res) => {
       data = data.filter((obj) => obj != undefined);
       console.log("mostRecentGame:", data[data.length - 1]);
       return res.send(data);
+    }
+  );
+});
+
+app.get("/api/chess-game-data/:datetime", async (req, res) => {
+  fs.readFile(
+    `text-data/${fs.existsSync("text-data/lichess-data.txt") ? "" : "manual-"}lichess-data.txt`,
+    "utf-8",
+    (error, data) => {
+      if (error) {
+        console.log("Unable to retrieve chess data", error);
+        return res.status(500).send(error);
+      }
+      data = data.split("\n\n\n");
+
+      specificGame = data.reverse().find((game, ind) => {
+        if (!game) return false;
+        lines = game.split("\n");
+        if (!lines[0].includes("Rated Blitz game")) return false;
+
+        const date = lines[6].substring(10, 20).split(".");
+        const time = lines[7].substring(10, 18).split(":");
+
+        const givenDate = req.params.datetime.substring(0, 10).split("-");
+        const givenTime = req.params.datetime.substring(11, 19).split(":");
+
+        if (date[2] == "00") {
+          console.log(date);
+        }
+        if (ind < 50) {
+          console.log(date, givenDate, time, givenTime);
+        }
+        return areArraysEqual(date, givenDate) && areArraysEqual(time, givenTime);
+      });
+      // data = data.reverse().map((game) => {
+      //   if (!game) return;
+      //   lines = game.split("\n");
+      //   if (!lines[0].includes("Rated Blitz game")) return;
+      //   if (lines[3].includes('White "cph5wr"')) {
+      //     const elo = parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]);
+      //     const date = lines[6].substring(10, 20);
+      //     const time = lines[7].substring(10, 18);
+      //     return { elo, date, time };
+      //   } else {
+      //     const elo = parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]);
+      //     const date = lines[6].substring(10, 20);
+      //     const time = lines[7].substring(10, 18);
+      //     return { elo, date, time };
+      //   }
+      // });
+      // data = data.filter((obj) => obj != undefined);
+      console.log("foundGame:", specificGame);
+      // return res.send(data);
+      res.send(true);
     }
   );
 });
