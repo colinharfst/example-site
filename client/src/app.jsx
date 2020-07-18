@@ -35,10 +35,10 @@ export function App() {
             <Baseball />
           </Route>
           <Route path="/chess">
-            <ChessComp />
+            <ChessComp key="random-game" />
           </Route>
           <Route path="/chess-game/:datetime">
-            <ChessComp />
+            <ChessComp key="specific-game" />
           </Route>
           <Route path="/chess-data">
             <ChessData />

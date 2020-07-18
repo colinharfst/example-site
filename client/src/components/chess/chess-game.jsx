@@ -45,6 +45,7 @@ export class SetRandomGame extends React.Component {
   componentDidMount() {
     this.game = new Chess();
     if (this.props.setGame) {
+      setTimeout(() => this.makeMoves(this.props.setGame.gameArray, 0), 650);
     } else {
       const gameRandomSeed = Math.floor(Math.random() * 3);
       this.setState({ gameRandomSeed });
@@ -54,6 +55,9 @@ export class SetRandomGame extends React.Component {
   }
 
   getGameOfRecord = (gameRandomSeed) => {
+    if (this.props.setGame) {
+      return this.props.setGame;
+    }
     switch (gameRandomSeed) {
       case 0:
         return colinWinning;

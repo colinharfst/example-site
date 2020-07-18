@@ -1,51 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./chess.scss";
 import SetRandomGame from "./chess-game";
 import Chessboard from "chessboardjsx";
 import { useParams } from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export function ChessComp() {
   document.title = "Chess ft. the Immortal Game";
 
   const x = useParams();
 
+  const [gameData, setGameData] = useState(null);
+
   useEffect(() => {
-    loadGameData(x.datetime);
-    // console.log(x);
+    if (x && x.datetime) {
+      loadGameData(x.datetime);
+    } else {
+      setGameData(false);
+    }
   }, [x]);
 
-  // const paramm = () => {
-  //   return useParams();
-  // };
-  // async componentDidMount() {
   const loadGameData = async (datetime) => {
-    console.log(await fetch(`/api/chess-game-data/${datetime}`).then(async (resp) => await resp.json()));
+    const game = await fetch(`/api/chess-game-data/${datetime}`).then(async (resp) => await resp.json());
+    const gameInfo = {
+      gameArray: game.gameMoves,
+      label: "How did I do?",
+      white: game.white === '[White "cph5wr"]' ? "Colin Harfst" : "",
+      black: game.black === '[Black "cph5wr"]' ? "Colin Harfst" : "",
+      orientation: game.white === '[White "cph5wr"]' ? "white" : "black",
+      winner: game.result === '[Result "1-0"]' ? "white" : game.result === '[Result "0-1"]' ? "black" : "draw",
+    };
+    setGameData(gameInfo);
   };
-  //   console.log(useParams());
-  //   // const x = await fetch("/api/chess-game-data").then(async (resp) => await resp.json());
-  // }
 
-  // const colinWinning = {
-  //   gameArray: ['Nf3', 'd5', 'b3', 'Nc6', 'Bb2', 'Bg4', 'e3', 'Qd7', 'h3', 'Bh5', 'Be2', 'O-O-O', 'Nd4',
-  //     'Nxd4', 'Bxd4', 'Bxe2', 'Qxe2', 'f6', 'Bxa7','b6','Qa6#'],
-  //   label: 'A recent win',
-  //   white: 'Colin Harfst',
-  //   black: 'letsmateout',
-  //   orientation: 'white',
-  //   winner: 'white'
-  // };
-
-  // render() {
+  if (gameData === null) {
+    return <CircularProgress style={{ margin: "40px", color: "#282c34" }} />;
+  }
   return (
-    <SetRandomGame setGame={false}>
+    <SetRandomGame setGame={gameData}>
       {({ position }) => (
         <Chessboard
           className="chessboard"
           width={320}
           id="random"
           position={position}
-          // TODO: Figure out how to pass orientation from gameRecord
-          // orientation={gameRecord.orientation}
+          // TODO: Figure out how to pass orientation from gameData
+          // orientation={gameData.orientation}
           draggable={false}
           transitionDuration={300}
           boardStyle={{

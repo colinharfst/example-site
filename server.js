@@ -7,7 +7,6 @@ const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
 const getDateBreakdown = require("./middleware/date-helper").getDateBreakdown;
-const areArraysEqual = require("./middleware/array-helper").areArraysEqual;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -121,24 +120,26 @@ app.get("/api/chess-data", async (_req, res) => {
     "utf-8",
     (error, data) => {
       if (error) {
-        console.log("Unable to retrieve chess data", error);
+        console.log("Unable to retrieve chess data:", error);
         return res.status(500).send(error);
       }
       data = data.split("\n\n\n");
       data = data.reverse().map((game) => {
         if (!game) return;
-        lines = game.split("\n");
+        const lines = game.split("\n");
         if (!lines[0].includes("Rated Blitz game")) return;
         if (lines[3].includes('White "cph5wr"')) {
+          const date = lines[6].substring(10, 20).split(".");
+          const time = lines[7].substring(10, 18).split(":");
+          const datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
           const elo = parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]);
-          const date = lines[6].substring(10, 20);
-          const time = lines[7].substring(10, 18);
-          return { elo, date, time };
+          return { datetime, elo };
         } else {
+          const date = lines[6].substring(10, 20).split(".");
+          const time = lines[7].substring(10, 18).split(":");
+          const datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
           const elo = parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]);
-          const date = lines[6].substring(10, 20);
-          const time = lines[7].substring(10, 18);
-          return { elo, date, time };
+          return { datetime, elo };
         }
       });
       data = data.filter((obj) => obj != undefined);
@@ -154,50 +155,40 @@ app.get("/api/chess-game-data/:datetime", async (req, res) => {
     "utf-8",
     (error, data) => {
       if (error) {
-        console.log("Unable to retrieve chess data", error);
+        console.log("Unable to retrieve chess game data:", error);
         return res.status(500).send(error);
       }
       data = data.split("\n\n\n");
-
+      const givenDatetime = new Date(req.params.datetime);
       specificGame = data.reverse().find((game, ind) => {
         if (!game) return false;
-        lines = game.split("\n");
+        const lines = game.split("\n");
         if (!lines[0].includes("Rated Blitz game")) return false;
-
-        const date = lines[6].substring(10, 20).split(".");
-        const time = lines[7].substring(10, 18).split(":");
-
-        const givenDate = req.params.datetime.substring(0, 10).split("-");
-        const givenTime = req.params.datetime.substring(11, 19).split(":");
-
-        if (date[2] == "00") {
-          console.log(date);
-        }
-        if (ind < 50) {
-          console.log(date, givenDate, time, givenTime);
-        }
-        return areArraysEqual(date, givenDate) && areArraysEqual(time, givenTime);
+        const gameDate = lines[6].substring(10, 20).split(".");
+        const gameTime = lines[7].substring(10, 18).split(":");
+        const gameDatetime = new Date(gameDate[0], gameDate[1] - 1, gameDate[2], gameTime[0], gameTime[1], gameTime[2]);
+        return givenDatetime.getTime() === gameDatetime.getTime();
       });
-      // data = data.reverse().map((game) => {
-      //   if (!game) return;
-      //   lines = game.split("\n");
-      //   if (!lines[0].includes("Rated Blitz game")) return;
-      //   if (lines[3].includes('White "cph5wr"')) {
-      //     const elo = parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]);
-      //     const date = lines[6].substring(10, 20);
-      //     const time = lines[7].substring(10, 18);
-      //     return { elo, date, time };
-      //   } else {
-      //     const elo = parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]);
-      //     const date = lines[6].substring(10, 20);
-      //     const time = lines[7].substring(10, 18);
-      //     return { elo, date, time };
-      //   }
-      // });
-      // data = data.filter((obj) => obj != undefined);
-      console.log("foundGame:", specificGame);
-      // return res.send(data);
-      res.send(true);
+      if (!specificGame) {
+        console.log("Unable to find chess game");
+        return res.status(500).send("Unable to find chess game");
+      }
+      const lines = specificGame.split("\n");
+      let gameMoves = lines[17].split(" ");
+      gameMoves.pop();
+      gameMoves = gameMoves.filter((x) => !x.includes("."));
+      const gameInfo = {
+        white: lines[3],
+        black: lines[4],
+        result: lines[5],
+        whiteElo: parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]),
+        blackElo: parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]),
+        timeControl: lines[13],
+        ending: lines[15],
+        gameMoves: gameMoves,
+      };
+      console.log("gameInfo:", gameInfo);
+      res.send(gameInfo);
     }
   );
 });

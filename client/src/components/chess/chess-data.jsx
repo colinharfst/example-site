@@ -26,13 +26,12 @@ export function ChessData() {
   const loadGameData = async () => {
     const x = await fetch("/api/chess-data").then(async (resp) => await resp.json());
     const data = x.map((game) => {
-      const dateStr = game.date.split(".");
-      const timeStr = game.time.split(":");
       return {
-        x: new Date(dateStr[0], dateStr[1] - 1, dateStr[2], timeStr[0], timeStr[1], timeStr[2]),
+        x: new Date(game.datetime),
         y: game.elo,
       };
     });
+    console.log(data);
     setGameData(data);
   };
 
@@ -77,10 +76,10 @@ export function ChessData() {
             // console.log(value, innerX, index);
           }}
           onValueClick={(datapoint, event) => {
-            const offset = new Date().getTimezoneOffset() * 60000;
-            const correctedISOTime = new Date(datapoint.x - offset).toISOString();
-            console.log("cliccckk", correctedISOTime);
-            history.push(`/chess-game/${correctedISOTime}`);
+            console.log("date", datapoint.x);
+            const straightISOTime = datapoint.x.toISOString();
+            console.log("cliccckk", straightISOTime);
+            history.push(`/chess-game/${straightISOTime}`);
             // console.log("cliccckk", datapoint.x.toLocaleString("en-US", { timeZone: "America/New_York" }));
             // history.push(`/chess-game/${datapoint.x.toLocaleString("en-US", { timeZone: "America/New_York" })}`);
           }}
