@@ -16,10 +16,7 @@ export class Judge extends React.Component {
   };
 
   componentDidMount = async () => {
-    document.title =
-      this.props.playerId === "592450"
-        ? "Aaron Judge Stats"
-        : "Cheater José Altuve Stats";
+    document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
     await Promise.all([this.getLiveData(), this.getStoredData()]);
     console.log(this.state);
   };
@@ -37,10 +34,7 @@ export class Judge extends React.Component {
         wasHRLastGamePlayed: null,
         playedInLastGame: null,
       });
-      document.title =
-        this.props.playerId === "592450"
-          ? "Aaron Judge Stats"
-          : "Cheater José Altuve Stats";
+      document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
       await Promise.all([this.getLiveData(), this.getStoredData()]);
       console.log(this.state);
     }
@@ -48,17 +42,15 @@ export class Judge extends React.Component {
 
   getLiveData = async () => {
     const liveData = await fetch(
-      `/api/live-baseball/${
-        this.props.playerId === "592450" ? "nyamlb" : "houmlb"
-      }/${this.props.playerId}`
+      `/api/live-baseball/${this.props.playerId === "592450" ? "nyamlb" : "houmlb"}/${this.props.playerId}`
     ).then(async (resp) => await resp.json());
     this.setState({ ...liveData });
   };
 
   getStoredData = async () => {
-    const storedData = await fetch(
-      `/api/stored-baseball/${this.props.playerId}`
-    ).then(async (resp) => await resp.json());
+    const storedData = await fetch(`/api/stored-baseball/${this.props.playerId}`).then(
+      async (resp) => await resp.json()
+    );
     this.setState({
       lastHRCount: storedData.lastHRCount,
       lastHRDate: this.getDateString(storedData.lastHRDate),
@@ -138,9 +130,7 @@ export class Judge extends React.Component {
           <div>
             {this.renderPlayerQuestion()}
             <h1 className="yes-text">YES</h1>
-            <h2>{`${playerName} hit ${lastHRCount} home run${
-              lastHRCount > 1 ? "s" : ""
-            } today!`}</h2>
+            <h2>{`${playerName} hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""} today!`}</h2>
             {this.renderNextPlayerButton()}
           </div>
         );

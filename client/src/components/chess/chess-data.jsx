@@ -24,7 +24,7 @@ export function ChessData() {
   }, [vw]);
 
   const loadGameData = async () => {
-    const x = await fetch("/api/chess-data").then(async (resp) => await resp.json());
+    const x = await fetch("/api/chess-record").then(async (resp) => await resp.json());
     const data = x.map((game) => {
       return {
         x: new Date(game.datetime),
@@ -56,7 +56,7 @@ export function ChessData() {
   }
   return (
     <div className="chess-data">
-      <h3>Chess Data Incoming.</h3>
+      <h3>Click along the line graph below to see a game from that stretch of time.</h3>
       <XYPlot width={vw} height={400} yDomain={[1100, 1600]} margin={{ left: 45, right: 20, top: 10, bottom: 40 }}>
         <XAxis
           tickValues={xAxisTicks}
@@ -76,12 +76,7 @@ export function ChessData() {
             // console.log(value, innerX, index);
           }}
           onValueClick={(datapoint, event) => {
-            console.log("date", datapoint.x);
-            const straightISOTime = datapoint.x.toISOString();
-            console.log("cliccckk", straightISOTime);
-            history.push(`/chess-game/${straightISOTime}`);
-            // console.log("cliccckk", datapoint.x.toLocaleString("en-US", { timeZone: "America/New_York" }));
-            // history.push(`/chess-game/${datapoint.x.toLocaleString("en-US", { timeZone: "America/New_York" })}`);
+            history.push(`/chess-game/${datapoint.x.toISOString()}`);
           }}
         />
       </XYPlot>

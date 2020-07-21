@@ -87,8 +87,19 @@ export class SetRandomGame extends React.Component {
   };
 
   render() {
+    const { setGame } = this.props;
     const { fen, gameRandomSeed } = this.state;
     const gameRecord = this.getGameOfRecord(this.state.gameRandomSeed);
+    if (setGame) {
+      return (
+        <div className="board-container">
+          <h1>{gameRecord.label}</h1>
+          {this.props.children({ position: fen })}
+          <h2 style={{ marginTop: "24px", marginBottom: "0" }}>{gameRecord.sublabel1}</h2>
+          <h2 style={{ marginTop: "20px", marginBottom: "0" }}>{gameRecord.sublabel2}</h2>
+        </div>
+      );
+    }
     return (
       <div className="board-container">
         <h1>{gameRecord.label}</h1>

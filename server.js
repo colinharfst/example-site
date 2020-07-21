@@ -31,12 +31,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   let hrCount = 0;
 
   // Get league data
-  const body = await requestPromise(baseUrl + "/scoreboard.xml").catch(
-    (error) => {
-      console.log("Unable to get MLB API league data with error:", error);
-      return res.status(500).send(error);
-    }
-  );
+  const body = await requestPromise(baseUrl + "/scoreboard.xml").catch((error) => {
+    console.log("Unable to get MLB API league data with error:", error);
+    return res.status(500).send(error);
+  });
 
   const parser = new DomParser();
   const xmlDoc = parser.parseFromString(body, "text/xml");
@@ -55,9 +53,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       isPreGame = game.attributes[2].value === "PRE_GAME";
 
       // Get game data
-      const gameBody = await requestPromise(
-        baseUrl + `/gid_${gameId}/boxscore.xml`
-      ).catch((error) => {
+      const gameBody = await requestPromise(baseUrl + `/gid_${gameId}/boxscore.xml`).catch((error) => {
         console.log("Unable to get MLB API game data with error:", error);
         return res.status(500).send(error);
       });
@@ -66,14 +62,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       const batters = xmlGameDoc.getElementsByTagName("batter");
 
       batters.forEach((batter) => {
-        const isPlayer = batter.attributes.some((attrib) =>
-          attrib.value.includes(req.params.playerId)
-        );
+        const isPlayer = batter.attributes.some((attrib) => attrib.value.includes(req.params.playerId));
         if (isPlayer) {
           playerPlayed = true;
-          hrCount += parseInt(
-            batter.attributes.find((attrib) => attrib.name === "hr").value
-          );
+          hrCount += parseInt(batter.attributes.find((attrib) => attrib.name === "hr").value);
         }
       });
     })
@@ -92,27 +84,17 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
         },
       },
       (error, _result) => {
-        if (error)
-          console.log(
-            "Unable to update MongoDB player data with error:",
-            error
-          );
+        if (error) console.log("Unable to update MongoDB player data with error:", error);
       }
     );
   } else if (isGameFinal) {
     collection.updateOne(
       { playerId: req.params.playerId },
       {
-        $set: playerPlayed
-          ? { wasHRLastGamePlayed: false, playedInLastGame: true }
-          : { playedInLastGame: false },
+        $set: playerPlayed ? { wasHRLastGamePlayed: false, playedInLastGame: true } : { playedInLastGame: false },
       },
       (error, _result) => {
-        if (error)
-          console.log(
-            "Unable to update MongoDB player data with error:",
-            error
-          );
+        if (error) console.log("Unable to update MongoDB player data with error:", error);
       }
     );
   }
@@ -147,11 +129,9 @@ app.get("/api/stored-baseball/:playerId", (req, res) => {
   });
 });
 
-app.get("/api/chess-data", async (_req, res) => {
+app.get("/api/chess-record", async (_req, res) => {
   fs.readFile(
-    `text-data/${
-      fs.existsSync("text-data/lichess-data.txt") ? "" : "manual-"
-    }lichess-data.txt`,
+    `text-data/${fs.existsSync("text-data/lichess-data.txt") ? "" : "manual-"}lichess-data.txt`,
     "utf-8",
     (error, data) => {
       if (error) {
@@ -166,32 +146,14 @@ app.get("/api/chess-data", async (_req, res) => {
         if (lines[3].includes('White "cph5wr"')) {
           const date = lines[6].substring(10, 20).split(".");
           const time = lines[7].substring(10, 18).split(":");
-          const datetime = new Date(
-            date[0],
-            date[1] - 1,
-            date[2],
-            time[0],
-            time[1],
-            time[2]
-          );
-          const elo =
-            parseInt(lines[8].substring(11, 15)) +
-            parseInt(lines[10].split('"')[1]);
+          const datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
+          const elo = parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]);
           return { datetime, elo };
         } else {
           const date = lines[6].substring(10, 20).split(".");
           const time = lines[7].substring(10, 18).split(":");
-          const datetime = new Date(
-            date[0],
-            date[1] - 1,
-            date[2],
-            time[0],
-            time[1],
-            time[2]
-          );
-          const elo =
-            parseInt(lines[9].substring(11, 15)) +
-            parseInt(lines[11].split('"')[1]);
+          const datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
+          const elo = parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]);
           return { datetime, elo };
         }
       });
@@ -202,11 +164,9 @@ app.get("/api/chess-data", async (_req, res) => {
   );
 });
 
-app.get("/api/chess-game-data/:datetime", async (req, res) => {
+app.get("/api/chess-game/:datetime", async (req, res) => {
   fs.readFile(
-    `text-data/${
-      fs.existsSync("text-data/lichess-data.txt") ? "" : "manual-"
-    }lichess-data.txt`,
+    `text-data/${fs.existsSync("text-data/lichess-data.txt") ? "" : "manual-"}lichess-data.txt`,
     "utf-8",
     (error, data) => {
       if (error) {
@@ -221,14 +181,7 @@ app.get("/api/chess-game-data/:datetime", async (req, res) => {
         if (!lines[0].includes("Rated Blitz game")) return false;
         const gameDate = lines[6].substring(10, 20).split(".");
         const gameTime = lines[7].substring(10, 18).split(":");
-        const gameDatetime = new Date(
-          gameDate[0],
-          gameDate[1] - 1,
-          gameDate[2],
-          gameTime[0],
-          gameTime[1],
-          gameTime[2]
-        );
+        const gameDatetime = new Date(gameDate[0], gameDate[1] - 1, gameDate[2], gameTime[0], gameTime[1], gameTime[2]);
         return givenDatetime.getTime() === gameDatetime.getTime();
       });
       if (!specificGame) {
@@ -243,12 +196,8 @@ app.get("/api/chess-game-data/:datetime", async (req, res) => {
         white: lines[3],
         black: lines[4],
         result: lines[5],
-        whiteElo:
-          parseInt(lines[8].substring(11, 15)) +
-          parseInt(lines[10].split('"')[1]),
-        blackElo:
-          parseInt(lines[9].substring(11, 15)) +
-          parseInt(lines[11].split('"')[1]),
+        whiteElo: parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]),
+        blackElo: parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]),
         timeControl: lines[13],
         ending: lines[15],
         gameMoves: gameMoves,
@@ -288,23 +237,20 @@ app.listen(port, () => {
       console.log("Connected to MongoDB");
     }
   );
-  request(
-    "https://lichess.org/api/games/user/cph5wr",
-    (error, _response, body) => {
-      if (error) {
-        console.log("Lichess connection failed with error:", error);
-        throw error;
-      }
-      if (body) {
-        fs.writeFile("text-data/lichess-data.txt", body, (error) => {
-          if (error) {
-            console.log("Failed to save Lichess data with error:", error);
-            throw error;
-          } else {
-            console.log("Stored latest Lichess data");
-          }
-        });
-      }
+  request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
+    if (error) {
+      console.log("Lichess connection failed with error:", error);
+      throw error;
     }
-  );
+    if (body) {
+      fs.writeFile("text-data/lichess-data.txt", body, (error) => {
+        if (error) {
+          console.log("Failed to save Lichess data with error:", error);
+          throw error;
+        } else {
+          console.log("Stored latest Lichess data");
+        }
+      });
+    }
+  });
 });
