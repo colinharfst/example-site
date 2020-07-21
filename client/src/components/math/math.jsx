@@ -31,6 +31,8 @@ export function Math() {
       <a href={research}>
         <img src={researchImg2} alt="research page 2" />
       </a>
+      <div style={{ paddingBottom: "60px" }} />
+
       {/* </object> */}
     </div>
   );

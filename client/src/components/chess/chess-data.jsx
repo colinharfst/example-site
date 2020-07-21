@@ -56,7 +56,7 @@ export function ChessData() {
   }
   return (
     <div className="chess-data">
-      <h3>Click along the line graph below to see a game from that stretch of time.</h3>
+      <h3>Click along the graph below to see a game from that stretch of time.</h3>
       <XYPlot width={vw} height={400} yDomain={[1100, 1600]} margin={{ left: 45, right: 20, top: 10, bottom: 40 }}>
         <XAxis
           tickValues={xAxisTicks}

@@ -1,6 +1,7 @@
 @import "~react-vis/dist/style";
 
 .chess-data {
+  margin-bottom: 60px;
   circle {
     visibility: hidden;
     cursor: pointer;

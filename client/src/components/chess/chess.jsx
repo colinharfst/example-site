@@ -13,6 +13,36 @@ export function ChessComp() {
   const [gameData, setGameData] = useState(null);
 
   useEffect(() => {
+    const getHoursString = (date) => {
+      const hours = date.getHours();
+      if (hours === 0) return "midnight";
+      if (1 <= hours && hours <= 11) return `${hours} a.m.`;
+      if (hours === 12) return "noon";
+      return `${hours - 12} p.m.`;
+    };
+
+    const getDateString = (date) => {
+      const d = new Date(date);
+      const correctedDate = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      return `${
+        monthNames[correctedDate.getMonth()]
+      } ${correctedDate.getDate()}, ${correctedDate.getFullYear()} at ${getHoursString(correctedDate)}`;
+    };
+
     const loadGameData = async (datetime) => {
       const game = await fetch(`/api/chess-game/${datetime}`).then(async (resp) => await resp.json());
       const gameInfo = {
@@ -44,36 +74,6 @@ export function ChessComp() {
       setGameData(false);
     }
   }, [x]);
-
-  const getHoursString = (date) => {
-    const hours = date.getHours();
-    if (hours === 0) return "midnight";
-    if (1 <= hours && hours <= 11) return `${hours} a.m.`;
-    if (hours === 12) return "noon";
-    return `${hours - 12} p.m.`;
-  };
-
-  const getDateString = (date) => {
-    const d = new Date(date);
-    const correctedDate = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return `${
-      monthNames[correctedDate.getMonth()]
-    } ${correctedDate.getDate()}, ${correctedDate.getFullYear()} at ${getHoursString(correctedDate)}`;
-  };
 
   if (gameData === null) {
     return <CircularProgress style={{ margin: "40px", color: "#282c34" }} />;
