@@ -70,7 +70,7 @@ export function ChessData() {
         <HorizontalGridLines />
         <LineMarkSeries
           data={gameData}
-          lineStyle={{ stroke: "red" }}
+          lineStyle={{ stroke: "#047695" }}
           size={6}
           onNearestX={(value, { event, innerX, index }) => {
             // console.log(value, innerX, index);
