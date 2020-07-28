@@ -11,10 +11,13 @@ module.exports = {
     const today = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
     const breakdown = today.split(" ");
     const isAM = breakdown[2] === "AM";
-    console.log(breakdown[2] === "PM");
-
-    const hours = breakdown[1].split(":")[0];
-
-    console.log(hours);
+    const isPM = breakdown[2] === "PM";
+    let hours = breakdown[1].split(":")[0];
+    if (isPM && hours != 12) {
+      hours += 12;
+    } else if (isAM && hours == 12) {
+      hours = 0;
+    }
+    return hours;
   },
 };

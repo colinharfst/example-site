@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
 const getDateBreakdown = require("./middleware/date-helpers").getDateBreakdown;
-// const getEasternTimeHour = require("./middleware/date-helpers").getEasternTimeHour;
+const getEasternTimeHour = require("./middleware/date-helpers").getEasternTimeHour;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -23,9 +23,35 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   // 09/12/2019 for last double-header
   // 10/13/2019 for last homerun
   // Consider using master_scoreboard.xml
-  const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
+  let baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
 
-  // console.log(getEasternTimeHour());
+  let shouldPretendYesterday = false;
+  // All to check if game ended after midnight
+  if (getEasternTimeHour() < 4) {
+    baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day - 1}`;
+
+    // Get league data
+    const body = await requestPromise(baseUrl + "/scoreboard.xml").catch((error) => {
+      console.log("Unable to get MLB API league data with error:", error);
+      return res.status(500).send(error);
+    });
+
+    const parser = new DomParser();
+    const xmlDoc = parser.parseFromString(body, "text/xml");
+
+    // Get team's games
+    const games = xmlDoc
+      .getElementsByTagName("game")
+      .filter((game) => game.attributes[0].value.includes(req.params.team));
+
+    const areGamesOver = games.every((game) => game.attributes[2].value === "FINAL");
+    if (areGamesOver) {
+      baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
+    } else {
+      shouldPretendYesterday = true;
+    }
+    // else, pretend it is still yesterday so database is updated
+  }
 
   let isGameToday = false;
   let isPreGame = false; // Second game of double header, if applicable (assuming games appear in order)
@@ -81,12 +107,16 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
 
   // Update player record in DB
   if (hrCount) {
+    const d = new Date();
+    if (shouldPretendYesterday) {
+      d.setDate(d.getDate() - 1);
+    }
     collection.updateOne(
       { playerId: req.params.playerId },
       {
         $set: {
           lastHRCount: hrCount,
-          lastHRDate: new Date(),
+          lastHRDate: d,
           wasHRLastGamePlayed: true,
           playedInLastGame: true,
         },
