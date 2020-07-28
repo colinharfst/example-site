@@ -156,13 +156,15 @@ app.get("/api/chess-record", async (_req, res) => {
         if (lines[3].includes('White "cph5wr"')) {
           const date = lines[6].substring(10, 20).split(".");
           const time = lines[7].substring(10, 18).split(":");
-          const datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
+          let datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
+          datetime = new Date(datetime.getTime() - datetime.getTimezoneOffset() * 6000);
           const elo = parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]);
           return { datetime, elo };
         } else {
           const date = lines[6].substring(10, 20).split(".");
           const time = lines[7].substring(10, 18).split(":");
-          const datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
+          let datetime = new Date(date[0], date[1] - 1, date[2], time[0], time[1], time[2]);
+          datetime = new Date(datetime.getTime() - datetime.getTimezoneOffset() * 6000);
           const elo = parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]);
           return { datetime, elo };
         }
@@ -191,7 +193,8 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
         if (!lines[0].includes("Rated Blitz game")) return false;
         const gameDate = lines[6].substring(10, 20).split(".");
         const gameTime = lines[7].substring(10, 18).split(":");
-        const gameDatetime = new Date(gameDate[0], gameDate[1] - 1, gameDate[2], gameTime[0], gameTime[1], gameTime[2]);
+        let gameDatetime = new Date(gameDate[0], gameDate[1] - 1, gameDate[2], gameTime[0], gameTime[1], gameTime[2]);
+        gameDatetime = new Date(gameDatetime.getTime() - gameDatetime.getTimezoneOffset() * 6000);
         return givenDatetime.getTime() === gameDatetime.getTime();
       });
       if (!specificGame) {
@@ -199,10 +202,14 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
         return res.status(500).send("Unable to find chess game");
       }
       const lines = specificGame.split("\n");
+      const gameDate = lines[6].substring(10, 20).split(".");
+      const gameTime = lines[7].substring(10, 18).split(":");
+      const gameDatetime = new Date(gameDate[0], gameDate[1] - 1, gameDate[2], gameTime[0], gameTime[1], gameTime[2]);
       let gameMoves = lines[17].split(" ");
       gameMoves.pop();
       gameMoves = gameMoves.filter((x) => !x.includes("."));
       const gameInfo = {
+        correctedDatetime: new Date(gameDatetime.getTime() - gameDatetime.getTimezoneOffset() * 6000),
         white: lines[3],
         black: lines[4],
         result: lines[5],

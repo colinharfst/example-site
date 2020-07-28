@@ -47,7 +47,7 @@ export function ChessComp() {
       const game = await fetch(`/api/chess-game/${datetime}`).then(async (resp) => await resp.json());
       const gameInfo = {
         gameArray: game.gameMoves,
-        // label: "How did I do?",
+        correctedDatetime: game.correctedDatetime,
         white: game.white === '[White "cph5wr"]' ? "Colin Harfst" : "",
         black: game.black === '[Black "cph5wr"]' ? "Colin Harfst" : "",
         orientation: game.white === '[White "cph5wr"]' ? "white" : "black",
@@ -61,7 +61,7 @@ export function ChessComp() {
         gameInfo.orientation === gameInfo.winner
           ? `A win with the ${gameInfo.orientation} pieces`
           : `A loss with the ${gameInfo.orientation} pieces`;
-      gameInfo.sublabel1 = `Played on ${getDateString(datetime)}`;
+      gameInfo.sublabel1 = `Played on ${getDateString(gameInfo.correctedDatetime)}`;
       gameInfo.sublabel2 = `${gameInfo.orientation === gameInfo.winner ? "Putting" : "Leaving"} me at a rating of ${
         gameInfo.orientation === "white" ? gameInfo.whiteElo : gameInfo.blackElo
       }`;
