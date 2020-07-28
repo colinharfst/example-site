@@ -1,4 +1,11 @@
 .baseball {
+  .next-player-button-flex {
+    display: flex;
+    justify-content: center;
+    .next-player-button {
+      margin: 0 10px;
+    }
+  }
   .next-player-button {
     display: flex;
     align-items: center;
@@ -16,6 +23,16 @@
   }
 }
 
+.app.dark-mode {
+  .next-player-button {
+    border-color: whitesmoke;
+    color: whitesmoke;
+    h3 {
+      color: whitesmoke;
+    }
+  }
+}
+
 .yankees-player {
   h1,
   h2,
@@ -23,10 +40,10 @@
     color: #003087;
   }
   .yes-text {
-    color: #003087;
+    color: #e4002c;
   }
   .no-text {
-    color: #e4002c;
+    color: #003087;
   }
   .next-player-button {
     border-color: #003087;
@@ -58,7 +75,31 @@
   }
 }
 
-//   color: #003087; // Yankees blue
-//   color: #e4002c; // Yankees red
-//   color: #eb6e1f; // Astros orange
-//   color: #002d62; // Astros blue
+.phillies-player {
+  h1,
+  h2,
+  h3 {
+    color: #002d72;
+  }
+  .yes-text {
+    color: #e81828;
+  }
+  .no-text {
+    color: #002d72;
+  }
+  .next-player-button {
+    border-color: #002d72;
+    color: #002d72;
+    h3 {
+      color: #002d72;
+    }
+  }
+}
+
+// Consider blue primary for all teams for consistency
+// color: #003087; // Yankees blue
+// color: #e4002c; // Yankees red
+// color: #eb6e1f; // Astros orange
+// color: #002d62; // Astros blue
+// color: #e81828; // Phillies red
+// color: #002d72; // Phillies blue

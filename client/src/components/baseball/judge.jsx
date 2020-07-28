@@ -17,7 +17,7 @@ export class Judge extends React.Component {
   };
 
   componentDidMount = async () => {
-    document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
+    document.title = this.getDocumentTitle();
     await Promise.all([this.getLiveData(), this.getStoredData()]);
     console.log(this.state);
   };
@@ -36,12 +36,26 @@ export class Judge extends React.Component {
         wasHRLastGamePlayed: null,
         playedInLastGame: null,
       });
-      document.title = this.props.playerId === "592450" ? "Aaron Judge Stats" : "Cheater José Altuve Stats";
-      // Not making synchronous api/live-baseball will update MongoDB and impact api/stored-baseball
-      // await Promise.all([this.getLiveData(), this.getStoredData()]);
-      await this.getLiveData();
-      await this.getStoredData();
+      document.title = this.getDocumentTitle();
+      await Promise.all([this.getLiveData(), this.getStoredData()]);
       console.log(this.state);
+    }
+  };
+
+  getDocumentTitle = () => {
+    switch (this.props.playerId) {
+      case "592450":
+        return "Aaron Judge Stats";
+      case "514888":
+        return "Cheater José Altuve Stats";
+      case "519317":
+        return "Giancarlo Stanton Stats";
+      case "650402":
+        return "Gleyber Torres Stats";
+      case "544369":
+        return "Didi Gregorius Stats";
+      default:
+        return null;
     }
   };
 
@@ -84,29 +98,81 @@ export class Judge extends React.Component {
   };
 
   renderPlayerQuestion = () => {
-    const { playerId } = this.props;
-    if (playerId === "592450") {
-      return <h1>Did the honorable Aaron Judge homer?</h1>;
+    switch (this.props.playerId) {
+      case "592450":
+        return <h1>Did the honorable Aaron Judge homer?</h1>;
+      case "514888":
+        return <h1>Did notorious cheater José Altuve homer?</h1>;
+      case "519317":
+        return <h1>Did Giancarlo Stanton homer?</h1>;
+      case "650402":
+        return <h1>Did Gleyber Torres homer?</h1>;
+      case "544369":
+        return <h1>Did former Yankee Didi Gregorius homer?</h1>;
+      default:
+        return null;
     }
-    return <h1>Did notorious cheater José Altuve homer?</h1>;
   };
 
   renderNextPlayerButton = () => {
     const { playerId, changePlayer } = this.props;
-    if (playerId === "592450") {
-      return (
-        <button className="next-player-button" onClick={changePlayer}>
-          <h3>What about notorious cheater José Altuve?</h3>
-          <ArrowRightIcon />
-        </button>
-      );
+    switch (playerId) {
+      case "592450":
+        return (
+          <button className="next-player-button" onClick={() => changePlayer("Altuve")}>
+            <h3>What about notorious cheater José Altuve?</h3>
+            <ArrowRightIcon />
+          </button>
+        );
+      case "514888":
+        return (
+          <div className="next-player-button-flex">
+            <button className="next-player-button" onClick={() => changePlayer("G")}>
+              <h3>Try Giancarlo Stanton</h3>
+              <ArrowRightIcon />
+            </button>
+            <button className="next-player-button" onClick={() => changePlayer("GT")}>
+              <h3>Or Gleyber Torres</h3>
+              <ArrowRightIcon />
+            </button>
+          </div>
+        );
+      case "519317":
+        return (
+          <div className="next-player-button-flex">
+            <button className="next-player-button" onClick={() => changePlayer("GT")}>
+              <h3>Try Gleyber Torres</h3>
+              <ArrowRightIcon />
+            </button>
+            <button className="next-player-button" onClick={() => changePlayer("Didi")}>
+              <h3>Or former Yankee Didi Gregorius</h3>
+              <ArrowRightIcon />
+            </button>
+          </div>
+        );
+      case "650402":
+        return (
+          <div className="next-player-button-flex">
+            <button className="next-player-button" onClick={() => changePlayer("G")}>
+              <h3>Try Giancarlo Stanton</h3>
+              <ArrowRightIcon />
+            </button>
+            <button className="next-player-button" onClick={() => changePlayer("Didi")}>
+              <h3>Or former Yankee Didi Gregorius</h3>
+              <ArrowRightIcon />
+            </button>
+          </div>
+        );
+      case "544369":
+        return (
+          <button className="next-player-button" onClick={() => changePlayer("Judge")}>
+            <h3>Try Aaron Judge</h3>
+            <ArrowRightIcon />
+          </button>
+        );
+      default:
+        break;
     }
-    return (
-      <button className="next-player-button" onClick={changePlayer}>
-        <h3>Try Aaron Judge</h3>
-        <ArrowRightIcon />
-      </button>
-    );
   };
 
   // This is pretty out of control with ifs, but oh well
@@ -183,7 +249,7 @@ export class Judge extends React.Component {
               <div>
                 {this.renderPlayerQuestion()}
                 <h1 className="yes-text">YES</h1>
-                <h2>{`${playerName} hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""} today!`}</h2>
+                <h2>{`${playerName} hit ${hrCount} home run${hrCount > 1 ? "s" : ""} today!`}</h2>
                 {this.renderNextPlayerButton()}
               </div>
             );
@@ -203,33 +269,18 @@ export class Judge extends React.Component {
         } else {
           // Game today & Game over & Player didn't play
           if (wasHRLastGamePlayed) {
-            // Game today & Game over & Player didn't play & Homered in last game
-            if (playedInLastGame) {
-              // Should never happen since if the game is over, playedInLastGame should be false
-              // Game today & Game over & Player didn't play & Homered in last game & Played in last game
-              return (
-                <div>
-                  {this.renderPlayerQuestion()}
-                  <h1 className="no-text">No</h1>
-                  <h2>{`${playerName} didn't play today, but he did hit a homer in the ${teamName}' last game on ${lastHRDate} when he hit ${lastHRCount} home run${
-                    lastHRCount > 1 ? "s" : ""
-                  }.`}</h2>
-                  {this.renderNextPlayerButton()}
-                </div>
-              );
-            } else {
-              // Game today & Game over & Player didn't play & Homered in last game & Didn't play in last game
-              return (
-                <div>
-                  {this.renderPlayerQuestion()}
-                  <h1 className="no-text">No</h1>
-                  <h2>{`${playerName} didn't play today, but he did hit a homer in his last game with the ${teamName} on ${lastHRDate} when he hit ${lastHRCount} home run${
-                    lastHRCount > 1 ? "s" : ""
-                  }.`}</h2>
-                  {this.renderNextPlayerButton()}
-                </div>
-              );
-            }
+            // Game today & Game over & Player didn't play & Homered in last game & Didn't play in last game
+            // We can infer "Didn't play in last game" since the "Game over" and "Player didn't play"
+            return (
+              <div>
+                {this.renderPlayerQuestion()}
+                <h1 className="no-text">No</h1>
+                <h2>{`${playerName} didn't play today, but he did hit a homer in his last game with the ${teamName} on ${lastHRDate} when he hit ${lastHRCount} home run${
+                  lastHRCount > 1 ? "s" : ""
+                }.`}</h2>
+                {this.renderNextPlayerButton()}
+              </div>
+            );
           } else {
             // Game today & Game over & Player didn't play & Didn't homer in last game
             return (
@@ -254,7 +305,7 @@ export class Judge extends React.Component {
               <div>
                 {this.renderPlayerQuestion()}
                 <h1 className="yes-text">YES</h1>
-                <h2>{`${playerName} hit ${lastHRCount} home run${lastHRCount > 1 ? "s" : ""} today!`}</h2>
+                <h2>{`${playerName} hit ${hrCount} home run${hrCount > 1 ? "s" : ""} today!`}</h2>
                 {this.renderNextPlayerButton()}
               </div>
             );
