@@ -14,7 +14,7 @@ To run this project locally, you should do the following:
 `npm run dev` - This concurrently builds the front-end and back-end for our application.
 
 <br/>The front-end is available at [http://localhost:3000](http://localhost:3000).
-<br/>The back-end is proxied through [http://localhost:5000/api/](http://localhost:5000/api/game/nyamlb).
+<br/>The back-end is proxied through [http://localhost:5000/api](http://localhost:5000/api/live-baseball/nyamlb/592450).
 <br/>Certain pages won't work unless local.env is populated with the correct database connection string.
 
 ### Deployment
