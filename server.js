@@ -234,10 +234,9 @@ app.listen(port, () => {
   console.log(" ( )>");
   console.log(" / \\ ");
   console.log("Listening on port", port);
-  MongoClient.connect(
-    "mongodb+srv://personal-site-user:uXuvpHxKOnhFwZtM@mlb-player-data-hmtxj.azure.mongodb.net/test?retryWrites=true&w=majority",
-    { useUnifiedTopology: true, useNewUrlParser: true },
-    (error, client) => {
+
+  const connect = (connection) =>
+    MongoClient.connect(connection, { useUnifiedTopology: true, useNewUrlParser: true }, (error, client) => {
       if (error) {
         console.log("MongoDB connection failed with error:", error);
         throw error;
@@ -245,8 +244,20 @@ app.listen(port, () => {
       const database = client.db("mlb-player-data");
       collection = database.collection("yankees-players");
       console.log("Connected to MongoDB");
-    }
-  );
+    });
+
+  if (process.env.NODE_ENV === "production") {
+    connect(process.env.MONGODB_SERVER);
+  } else {
+    fs.readFile("local.env", "utf-8", (error, data) => {
+      if (error) {
+        console.log("Unable to read environment variable:", error);
+        throw error;
+      }
+      connect(data.split('"')[1]);
+    });
+  }
+
   request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
     if (error) {
       console.log("Lichess connection failed with error:", error);
