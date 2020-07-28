@@ -6,9 +6,9 @@ import { useParams } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 export function ChessComp() {
-  document.title = "Chess ft. the Immortal Game";
-
   const x = useParams();
+
+  document.title = x && x.datetime ? "A Chess Match" : "Chess ft. the Immortal Game";
 
   const [gameData, setGameData] = useState(null);
 
