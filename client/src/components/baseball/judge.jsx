@@ -60,8 +60,11 @@ export class Judge extends React.Component {
   };
 
   getLiveData = async () => {
+    const { playerId } = this.props;
     const liveData = await fetch(
-      `/api/live-baseball/${this.props.playerId === "592450" ? "nyamlb" : "houmlb"}/${this.props.playerId}`
+      `/api/live-baseball/${playerId === "514888" ? "houmlb" : playerId === "544369" ? "phimlb" : "nyamlb"}/${
+        this.props.playerId
+      }`
     ).then(async (resp) => await resp.json());
     this.setState({ ...liveData });
   };
