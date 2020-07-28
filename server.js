@@ -6,7 +6,8 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
-const getDateBreakdown = require("./middleware/date-helper").getDateBreakdown;
+const getDateBreakdown = require("./middleware/date-helpers").getDateBreakdown;
+// const getEasternTimeHour = require("./middleware/date-helpers").getEasternTimeHour;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,9 +25,13 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   // Consider using master_scoreboard.xml
   const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
 
+  // console.log(getEasternTimeHour());
+
   let isGameToday = false;
-  let isPreGame = false;
+  let isPreGame = false; // Second game of double header, if applicable (assuming games appear in order)
   let isGameFinal = false; // Second game of double header, if applicable (assuming games appear in order)
+  // Possible defect on the rare occasion where a double header also includes a PPD
+  let isPostponed = false; // Second game of double header, if applicable (assuming games appear in order)
   let playerPlayed = false;
   let hrCount = 0;
 
@@ -48,7 +53,6 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     games.map(async (game) => {
       isGameToday = true;
       gameId = game.attributes[0].value;
-      // TODO: Make game status generic (PRE_GAME, IN_PROGRESS, FINAL, POSTPONED?, ETC?)
       isGameFinal = game.attributes[2].value === "FINAL";
       isPreGame = game.attributes[2].value === "PRE_GAME";
 
@@ -60,6 +64,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
 
       const xmlGameDoc = parser.parseFromString(gameBody, "text/xml");
       const batters = xmlGameDoc.getElementsByTagName("batter");
+
+      if (isGameFinal & !batters.length) {
+        isPostponed = true;
+      }
 
       batters.forEach((batter) => {
         const isPlayer = batter.attributes.some((attrib) => attrib.value.includes(req.params.playerId));
@@ -87,7 +95,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
         if (error) console.log("Unable to update MongoDB player data with error:", error);
       }
     );
-  } else if (isGameFinal) {
+  } else if (isGameFinal & !isPostponed) {
     collection.updateOne(
       { playerId: req.params.playerId },
       {
@@ -102,6 +110,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   console.log("isGameToday:", isGameToday);
   console.log("isPreGame:", isPreGame);
   console.log("isGameFinal:", isGameFinal);
+  console.log("isPostponed:", isPostponed);
   console.log("playerPlayed:", playerPlayed);
   console.log("hrCount:", hrCount);
 
@@ -109,6 +118,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     isGameToday: isGameToday,
     isPreGame: isPreGame,
     isGameFinal: isGameFinal,
+    isPostponed: isPostponed,
     playerPlayed: playerPlayed,
     hrCount: hrCount,
   });
