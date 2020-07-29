@@ -17,4 +17,24 @@ module.exports = {
     if (isPM && hours !== 12) hours += 12;
     return hours;
   },
+  customTimeAdder: (startTime, duration) => {
+    // Example:
+    // startTime = "06:05 pm"
+    // duration = "3:21"
+    const startTimeSplit1 = startTime.split(" ");
+    const startTimeSplit2 = startTimeSplit1[0].split(":");
+    const durationSplit = duration.split(":");
+
+    let startHours = parseInt(startTimeSplit2[0]);
+    const startMin = parseInt(startTimeSplit2[2]);
+    const durationHours = parseInt(durationSplit[0]);
+    const durationMin = parseInt(durationSplit[1]);
+
+    if (startTimeSplit1[1] == "pm" && startHours !== 12) startHours += 12;
+
+    const endHours = startHours + durationHours;
+    const endMin = startMin + durationMin;
+    if (endMin >= 60) endHours += 1;
+    return endHours;
+  },
 };

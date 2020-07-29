@@ -8,6 +8,7 @@ const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
 const getDateBreakdown = require("./middleware/date-helpers").getDateBreakdown;
 const getEasternTimeHour = require("./middleware/date-helpers").getEasternTimeHour;
+const customTimeAdder = require("./middleware/date-helpers").customTimeAdder;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -23,10 +24,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
 
   // Temporary fix for games ending after midnight, treat as though it's yesterday
   let shouldFakeDate = false;
-  if (getEasternTimeHour() < 4) {
-    shouldFakeDate = true;
+  if (getEasternTimeHour < 4) {
+    let tmpMonth, tmpDay;
     if (date.day === 1) {
-      date.month -= 1;
+      tmpMonth = date.month - 1;
       const monthMapping = {
         "3": 31,
         "4": 30,
@@ -37,9 +38,52 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
         "9": 30,
         "10": 31,
       };
-      date.day = monthMapping[date.month];
+      tmpDay = monthMapping[tmpMonth];
     } else {
-      date.day -= 1;
+      tmpMonth = date.month;
+      tmpDay = date.day - 1;
+    }
+
+    // Get league data
+    const baseUrl_ = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${tmpMonth}/day_${tmpDay}`;
+    const body_ = await requestPromise(baseUrl_ + "/scoreboard.xml").catch((error) => {
+      console.log("Unable to get MLB API league data with error:", error);
+      return res.status(500).send(error);
+    });
+
+    const parser_ = new DomParser();
+    const xmlDoc_ = parser_.parseFromString(body_, "text/xml");
+
+    // Get team's games
+    const games_ = xmlDoc_
+      .getElementsByTagName("game")
+      .filter((game) => game.attributes[0].value.includes(req.params.team));
+
+    await Promise.all(
+      games_.map(async (game) => {
+        const gameId = game.attributes[0].value;
+        const gameStartTime = game.attributes[3].value;
+        // Get game data
+        const gameBody = await requestPromise(baseUrl_ + `/gid_${gameId}/boxscore.xml`).catch((error) => {
+          console.log("Unable to get MLB API game data with error:", error);
+          return res.status(500).send(error);
+        });
+
+        const xmlGameDoc = parser_.parseFromString(gameBody, "text/xml");
+        const splitX = xmlGameDoc.rawHTML.split("<b>T</b>: ");
+        const splitY = splitX.length > 1 ? splitX[1].split(".") : [];
+        const gameLength = splitY.length ? splitY[0] : null;
+
+        if (gameLength && customTimeAdder(gameStartTime, gameLength) >= 24) shouldFakeDate = true;
+      })
+    );
+
+    const allGamesAreFinal = games_.every((game) => game.attributes[2].value === "FINAL");
+
+    if (!allGamesAreFinal || shouldFakeDate) {
+      shouldFakeDate = true;
+      date.month = tmpMonth;
+      date.day = tmpDay;
     }
   }
 
@@ -49,10 +93,9 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
 
   let isGameToday = false;
-  let isPreGame = false; // Second game of double header, if applicable
-  let isGameFinal = false; // Second game of double header, if applicable
-  // Possible defect on the rare occasion where a double header also includes a PPD
-  let isPostponed = false; // Second game of double header, if applicable
+  const isPreGameArray = [];
+  const isGameFinalArray = [];
+  const isPostponedArray = [];
   let playerPlayed = false;
   let hrCount = 0;
 
@@ -71,11 +114,11 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     .filter((game) => game.attributes[0].value.includes(req.params.team));
 
   await Promise.all(
-    games.map(async (game) => {
+    games.map(async (game, index) => {
       isGameToday = true;
-      gameId = game.attributes[0].value;
-      isGameFinal = game.attributes[2].value === "FINAL";
-      isPreGame = game.attributes[2].value === "PRE_GAME";
+      const gameId = game.attributes[0].value;
+      isGameFinalArray.push(game.attributes[2].value === "FINAL");
+      isPreGameArray.push(game.attributes[2].value === "PRE_GAME");
 
       // Get game data
       const gameBody = await requestPromise(baseUrl + `/gid_${gameId}/boxscore.xml`).catch((error) => {
@@ -86,8 +129,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       const xmlGameDoc = parser.parseFromString(gameBody, "text/xml");
       const batters = xmlGameDoc.getElementsByTagName("batter");
 
-      if (isGameFinal & !batters.length) {
-        isPostponed = true;
+      if (isGameFinalArray[index] & !batters.length) {
+        isPostponedArray.push(true);
+      } else {
+        isPostponedArray.push(false);
       }
 
       batters.forEach((batter) => {
@@ -99,6 +144,13 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       });
     })
   );
+
+  const isPreGame =
+    isPreGameArray.length &&
+    isPostponedArray.length &&
+    isPreGameArray.every((isPre, index) => isPre || isPostponedArray[index]);
+  const isGameFinal = isGameFinalArray.length && isGameFinalArray.every((isFin) => isFin);
+  const isPostponed = isPostponedArray.length && isPostponedArray.every((isPPD) => isPPD);
 
   // Update player record in DB
   if (hrCount) {
