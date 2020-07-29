@@ -49,10 +49,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
 
   let isGameToday = false;
-  let isPreGame = false; // Second game of double header, if applicable (assuming games appear in order)
-  let isGameFinal = false; // Second game of double header, if applicable (assuming games appear in order)
+  let isPreGame = false; // Second game of double header, if applicable
+  let isGameFinal = false; // Second game of double header, if applicable
   // Possible defect on the rare occasion where a double header also includes a PPD
-  let isPostponed = false; // Second game of double header, if applicable (assuming games appear in order)
+  let isPostponed = false; // Second game of double header, if applicable
   let playerPlayed = false;
   let hrCount = 0;
 
@@ -243,27 +243,12 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
-console.log("not necessaryily production");
 if (process.env.NODE_ENV === "production") {
-  console.log("production");
   // Serve any static files
   app.use(express.static(path.join(__dirname, "client/build")));
 
-  app.get("/", (_req, res) => {
-    console.log("testing0");
-    // Using these so that when Kaffeine pings Heroku, MongoDB is updated
-    // https://kaffeine.herokuapp.com/
-    request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
-    request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
-    request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
-    request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
-    request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
-    return res.sendFile(path.join(__dirname, "client/build", "index.html"));
-  });
-
   // Handle React routing, return all requests to React app
   app.get("*", (_req, res) => {
-    console.log("testing1");
     return res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
