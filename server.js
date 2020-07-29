@@ -22,7 +22,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const date = getDateBreakdown();
 
   // Temporary fix for games ending after midnight, treat as though it's yesterday
-  const shouldFakeDate = false;
+  let shouldFakeDate = false;
   if (getEasternTimeHour() < 4) {
     shouldFakeDate = true;
     if (date.day === 1) {
@@ -49,10 +49,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
 
   let isGameToday = false;
-  let isPreGame = false; // Second game of double header, if applicable (assuming games appear in order)
-  let isGameFinal = false; // Second game of double header, if applicable (assuming games appear in order)
+  let isPreGame = false; // Second game of double header, if applicable
+  let isGameFinal = false; // Second game of double header, if applicable
   // Possible defect on the rare occasion where a double header also includes a PPD
-  let isPostponed = false; // Second game of double header, if applicable (assuming games appear in order)
+  let isPostponed = false; // Second game of double header, if applicable
   let playerPlayed = false;
   let hrCount = 0;
 
