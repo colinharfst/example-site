@@ -243,7 +243,7 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
-app.use("/", (_req, _res, next) => {
+app.use("/", (req, _res, next) => {
   // Using these so that when Kaffeine pings Heroku, MongoDB is updated
   // https://kaffeine.herokuapp.com/
   if (req.path !== "/") return next();
