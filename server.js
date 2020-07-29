@@ -248,6 +248,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 
   app.get("/", (_req, res) => {
+    console.log("testing0");
     // Using these so that when Kaffeine pings Heroku, MongoDB is updated
     // https://kaffeine.herokuapp.com/
     request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
@@ -260,6 +261,7 @@ if (process.env.NODE_ENV === "production") {
 
   // Handle React routing, return all requests to React app
   app.get("*", (_req, res) => {
+    console.log("testing1");
     return res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }

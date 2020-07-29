@@ -12,7 +12,7 @@ module.exports = {
     const breakdown = today.split(" ");
     const isAM = breakdown[2] === "AM";
     const isPM = breakdown[2] === "PM";
-    let hours = breakdown[1].split(":")[0];
+    let hours = parseInt(breakdown[1].split(":")[0]);
     if (isAM && hours === 12) hours = 0;
     if (isPM && hours !== 12) hours += 12;
     return hours;
