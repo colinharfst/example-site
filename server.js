@@ -22,7 +22,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const date = getDateBreakdown();
 
   // Temporary fix for games ending after midnight, treat as though it's yesterday
-  const shouldFakeDate = false;
+  let shouldFakeDate = false;
   if (getEasternTimeHour() < 4) {
     shouldFakeDate = true;
     if (date.day === 1) {
@@ -243,7 +243,9 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
+console.log("not necessaryily production");
 if (process.env.NODE_ENV === "production") {
+  console.log("production");
   // Serve any static files
   app.use(express.static(path.join(__dirname, "client/build")));
 
