@@ -243,6 +243,17 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
+app.get("/", (_req, res) => {
+  // Using these so that when Kaffeine pings Heroku, MongoDB is updated
+  // https://kaffeine.herokuapp.com/
+  request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
+  request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
+  request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
+  request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
+  request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
+  res.send("Updated MLB player data");
+});
+
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
   app.use(express.static(path.join(__dirname, "client/build")));

@@ -1,18 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./home.scss";
 
 export function Home() {
   document.title = "Colin Harfst - Home";
-
-  useEffect(() => {
-    // Using these so that when Kaffeine pings Heroku, MongoDB is updated
-    // https://kaffeine.herokuapp.com/
-    fetch("/api/live-baseball/nyamlb/592450");
-    fetch("/api/live-baseball/nyamlb/519317");
-    fetch("/api/live-baseball/nyamlb/650402");
-    fetch("/api/live-baseball/houmlb/514888");
-    fetch("/api/live-baseball/phimlb/544369");
-  }, []);
 
   return (
     <div className="home-text">
