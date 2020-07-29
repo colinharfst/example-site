@@ -246,6 +246,7 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
 app.use("/", (_req, _res, next) => {
   // Using these so that when Kaffeine pings Heroku, MongoDB is updated
   // https://kaffeine.herokuapp.com/
+  if (req.path !== "/") return next();
   request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
   request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
   request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
