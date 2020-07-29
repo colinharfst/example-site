@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
 const getDateBreakdown = require("./middleware/date-helpers").getDateBreakdown;
-// const getEasternTimeHour = require("./middleware/date-helpers").getEasternTimeHour;
+const getEasternTimeHour = require("./middleware/date-helpers").getEasternTimeHour;
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,12 +20,33 @@ let collection;
 // API calls
 app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const date = getDateBreakdown();
+
+  // Temporary fix for games ending after midnight, treat as though it's yesterday
+  const shouldFakeDate = false;
+  if (getEasternTimeHour() < 4) {
+    shouldFakeDate = true;
+    if (date.day === 1) {
+      date.month -= 1;
+      const monthMapping = {
+        "3": 31,
+        "4": 30,
+        "5": 31,
+        "6": 30,
+        "7": 31,
+        "8": 31,
+        "9": 30,
+        "10": 31,
+      };
+      date.day = monthMapping[date.month];
+    } else {
+      date.day -= 1;
+    }
+  }
+
   // 09/12/2019 for last double-header
   // 10/13/2019 for last homerun
   // Consider using master_scoreboard.xml
   const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
-
-  // console.log(getEasternTimeHour());
 
   let isGameToday = false;
   let isPreGame = false; // Second game of double header, if applicable (assuming games appear in order)
@@ -81,12 +102,16 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
 
   // Update player record in DB
   if (hrCount) {
+    const d = new Date();
+    if (shouldFakeDate) {
+      d.setDate(d.getDate() - 1);
+    }
     collection.updateOne(
       { playerId: req.params.playerId },
       {
         $set: {
           lastHRCount: hrCount,
-          lastHRDate: new Date(),
+          lastHRDate: d,
           wasHRLastGamePlayed: true,
           playedInLastGame: true,
         },
