@@ -22,7 +22,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const date = getDateBreakdown();
 
   // Temporary fix for games ending after midnight, treat as though it's yesterday
-  let shouldFakeDate = false;
+  const shouldFakeDate = false;
   if (getEasternTimeHour() < 4) {
     shouldFakeDate = true;
     if (date.day === 1) {
@@ -49,10 +49,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
   const baseUrl = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${date.month}/day_${date.day}`;
 
   let isGameToday = false;
-  let isPreGame = false; // Second game of double header, if applicable
-  let isGameFinal = false; // Second game of double header, if applicable
+  let isPreGame = false; // Second game of double header, if applicable (assuming games appear in order)
+  let isGameFinal = false; // Second game of double header, if applicable (assuming games appear in order)
   // Possible defect on the rare occasion where a double header also includes a PPD
-  let isPostponed = false; // Second game of double header, if applicable
+  let isPostponed = false; // Second game of double header, if applicable (assuming games appear in order)
   let playerPlayed = false;
   let hrCount = 0;
 
@@ -241,6 +241,17 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
       res.send(gameInfo);
     }
   );
+});
+
+app.use("/", (_req, _res, next) => {
+  // Using these so that when Kaffeine pings Heroku, MongoDB is updated
+  // https://kaffeine.herokuapp.com/
+  request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
+  request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
+  request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
+  request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
+  request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
+  next();
 });
 
 if (process.env.NODE_ENV === "production") {
