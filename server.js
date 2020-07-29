@@ -117,8 +117,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     games.map(async (game, index) => {
       isGameToday = true;
       const gameId = game.attributes[0].value;
-      isGameFinalArray.push(game.attributes[2].value === "FINAL");
-      isPreGameArray.push(game.attributes[2].value === "PRE_GAME");
+      isGameFinalArray.splice(index, 0, game.attributes[2].value === "FINAL");
+      // isGameFinalArray.push(game.attributes[2].value === "FINAL");
+      isPreGameArray.splice(index, 0, game.attributes[2].value === "PRE_GAME");
+      // isPreGameArray.push(game.attributes[2].value === "PRE_GAME");
 
       // Get game data
       const gameBody = await requestPromise(baseUrl + `/gid_${gameId}/boxscore.xml`).catch((error) => {
@@ -130,9 +132,9 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       const batters = xmlGameDoc.getElementsByTagName("batter");
 
       if (isGameFinalArray[index] & !batters.length) {
-        isPostponedArray.push(true);
+        isPostponedArray.splice(index, 0, true);
       } else {
-        isPostponedArray.push(false);
+        isPostponedArray.splice(index, 0, false);
       }
 
       batters.forEach((batter) => {
@@ -145,6 +147,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     })
   );
 
+  console.log(isPreGameArray, isGameFinalArray, isPostponedArray);
   const isPreGame =
     isPreGameArray.length &&
     isPostponedArray.length &&
