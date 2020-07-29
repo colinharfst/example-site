@@ -118,9 +118,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       isGameToday = true;
       const gameId = game.attributes[0].value;
       isGameFinalArray.splice(index, 0, game.attributes[2].value === "FINAL");
-      // isGameFinalArray.push(game.attributes[2].value === "FINAL");
       isPreGameArray.splice(index, 0, game.attributes[2].value === "PRE_GAME");
-      // isPreGameArray.push(game.attributes[2].value === "PRE_GAME");
 
       // Get game data
       const gameBody = await requestPromise(baseUrl + `/gid_${gameId}/boxscore.xml`).catch((error) => {
@@ -298,19 +296,37 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
-app.use("/", (req, _res, next) => {
-  // Using these so that when Kaffeine pings Heroku, MongoDB is updated
-  // https://kaffeine.herokuapp.com/
-  if (req.path !== "/") return next();
-  request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
-  request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
-  request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
-  request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
-  request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
-  next();
-});
-
 if (process.env.NODE_ENV === "production") {
+  app.use("/", (req, _res, next) => {
+    // Using these so that when Kaffeine pings Heroku, MongoDB is updated
+    // https://kaffeine.herokuapp.com/
+    if (req.path !== "/") return next();
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
+    request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
+    request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
+    // Using this so that when Kaffeine pings Heroku, Lichess data is updated
+    // https://kaffeine.herokuapp.com/
+    request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
+      if (error) {
+        console.log("Lichess connection failed with error:", error);
+        throw error;
+      }
+      if (body) {
+        fs.writeFile("text-data/lichess-data.txt", body, (error) => {
+          if (error) {
+            console.log("Failed to save Lichess data with error:", error);
+            throw error;
+          } else {
+            console.log("Stored latest Lichess data");
+          }
+        });
+      }
+    });
+    next();
+  });
+
   // Serve any static files
   app.use(express.static(path.join(__dirname, "client/build")));
 
@@ -349,21 +365,4 @@ app.listen(port, () => {
       connect(data.split('"')[1]);
     });
   }
-
-  request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
-    if (error) {
-      console.log("Lichess connection failed with error:", error);
-      throw error;
-    }
-    if (body) {
-      fs.writeFile("text-data/lichess-data.txt", body, (error) => {
-        if (error) {
-          console.log("Failed to save Lichess data with error:", error);
-          throw error;
-        } else {
-          console.log("Stored latest Lichess data");
-        }
-      });
-    }
-  });
 });
