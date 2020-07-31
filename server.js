@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const DomParser = require("dom-parser");
 const MongoClient = require("mongodb").MongoClient;
 const getDateBreakdown = require("./middleware/date-helpers").getDateBreakdown;
-const getEasternTimeHour = require("./middleware/date-helpers").getEasternTimeHour;
+const getEasternTimeTuple = require("./middleware/date-helpers").getEasternTimeTuple;
 const customTimeAdder = require("./middleware/date-helpers").customTimeAdder;
 
 const app = express();
@@ -24,8 +24,8 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
 
   // Temporary fix for games ending after midnight, treat as though it's yesterday
   let shouldFakeDate = false;
-  const easternTimeHour = getEasternTimeHour();
-  if (easternTimeHour < 4) {
+  const easternTimeTuple = getEasternTimeTuple();
+  if (easternTimeTuple.hours <= 3) {
     let tmpMonth, tmpDay;
     if (date.day === 1) {
       tmpMonth = date.month - 1;
@@ -45,10 +45,12 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       tmpDay = date.day - 1;
     }
 
-    // Round up to create 30 minute buffer for Kaffeine to ping Heroku
+    // Use to create buffer for Kaffeine to ping Heroku
+    // when it's between midnight and 12:35 p.m
+    // and the game ended between 11:30 to midnight
     // https://kaffeine.herokuapp.com/
     let roundUp = false;
-    if (easternTimeHour === 0) roundUp = true;
+    if (easternTimeTuple.hours === 0 && easternTimeTuple.minutes <= 35) roundUp = true;
 
     // Get league data
     const baseUrl_ = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${tmpMonth}/day_${tmpDay}`;
@@ -190,11 +192,6 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     );
   }
 
-  console.log("isGameToday:", isGameToday);
-  console.log("isPreGame:", isPreGame);
-  console.log("isGameFinal:", isGameFinal);
-  console.log("isPostponed:", isPostponed);
-  console.log("playerPlayed:", playerPlayed);
   console.log("hrCount:", hrCount);
 
   return res.send({
@@ -214,10 +211,8 @@ app.get("/api/stored-baseball/:playerId", (req, res) => {
       console.log("Unable to find MongoDB player data with error:", error);
       return res.status(500).send(error);
     }
-    console.log("lastHRCount:", result.lastHRCount);
     console.log("lastHRDate:", result.lastHRDate);
-    console.log("wasHRLastGamePlayed:", result.wasHRLastGamePlayed);
-    console.log("playedInLastGame:", result.playedInLastGame);
+    console.log("lastHRCount:", result.lastHRCount);
     return res.send(result);
   });
 });
@@ -295,7 +290,11 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
         ending: lines[15],
         gameMoves: gameMoves,
       };
-      console.log("gameInfo:", gameInfo);
+      console.log("white:", gameInfo.white);
+      console.log("black:", gameInfo.black);
+      console.log("result:", gameInfo.result);
+      console.log("whiteElo:", gameInfo.whiteElo);
+      console.log("blackElo:", gameInfo.blackElo);
       res.send(gameInfo);
     }
   );
