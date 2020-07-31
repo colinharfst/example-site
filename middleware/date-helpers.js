@@ -17,7 +17,7 @@ module.exports = {
     if (isPM && hours !== 12) hours += 12;
     return hours;
   },
-  customTimeAdder: (startTime, duration) => {
+  customTimeAdder: (startTime, duration, roundUp) => {
     // Example:
     // startTime = "06:05 pm"
     // duration = "3:21"
@@ -35,6 +35,9 @@ module.exports = {
     const endHours = startHours + durationHours;
     const endMin = startMin + durationMin;
     if (endMin >= 60) endHours += 1;
+    // Round up to create 30 minute buffer for Kaffeine to ping Heroku
+    // https://kaffeine.herokuapp.com/
+    if (roundUp && endMin % 60 >= 30) endHours += 1;
     return endHours;
   },
 };

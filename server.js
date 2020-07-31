@@ -24,7 +24,8 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
 
   // Temporary fix for games ending after midnight, treat as though it's yesterday
   let shouldFakeDate = false;
-  if (getEasternTimeHour < 4) {
+  const easternTimeHour = getEasternTimeHour();
+  if (easternTimeHour < 4) {
     let tmpMonth, tmpDay;
     if (date.day === 1) {
       tmpMonth = date.month - 1;
@@ -43,6 +44,11 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
       tmpMonth = date.month;
       tmpDay = date.day - 1;
     }
+
+    // Round up to create 30 minute buffer for Kaffeine to ping Heroku
+    // https://kaffeine.herokuapp.com/
+    let roundUp = false;
+    if (easternTimeHour === 0) roundUp = true;
 
     // Get league data
     const baseUrl_ = `http://gd2.mlb.com/components/game/mlb/year_${date.year}/month_${tmpMonth}/day_${tmpDay}`;
@@ -74,7 +80,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
         const splitY = splitX.length > 1 ? splitX[1].split(".") : [];
         const gameLength = splitY.length ? splitY[0] : null;
 
-        if (gameLength && customTimeAdder(gameStartTime, gameLength) >= 24) shouldFakeDate = true;
+        if (gameLength && customTimeAdder(gameStartTime, gameLength, roundUp) >= 24) shouldFakeDate = true;
       })
     );
 
@@ -145,7 +151,6 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     })
   );
 
-  console.log(isPreGameArray, isGameFinalArray, isPostponedArray);
   const isPreGame =
     isPreGameArray.length &&
     isPostponedArray.length &&
