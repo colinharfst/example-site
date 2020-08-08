@@ -20,7 +20,7 @@ module.exports = {
   },
   customTimeAdder: (startTime, duration, roundUp) => {
     // Example:
-    // startTime = "06:05 pm" or "6:05 PM"
+    // startTime = "06:05 pm"
     // duration = "3:20"
     // duration (with delay) = "3:20 (1:10 delay)"
     const startTimeSplit1 = startTime.split(" ");
@@ -32,7 +32,7 @@ module.exports = {
     const durationHours = parseInt(durationSplit[0]);
     const durationMin = parseInt(durationSplit[1]);
 
-    if ((startTimeSplit1[1] == "pm" || startTimeSplit1[1] == "PM") && startHours !== 12) startHours += 12;
+    if (startTimeSplit1[1] == "pm" && startHours !== 12) startHours += 12;
 
     let delayHours = 0;
     let delayMin = 0;

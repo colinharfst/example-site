@@ -70,6 +70,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     await Promise.all(
       games_.map(async (game) => {
         const gameId = game.attributes[0].value;
+        let gameStartTime = game.attributes[3].value;
         // Get game data
         const gameBody = await requestPromise(baseUrl_ + `/gid_${gameId}/boxscore.xml`).catch((error) => {
           console.log("Unable to get MLB API game data with error:", error);
@@ -77,12 +78,10 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
         });
 
         const xmlGameDoc = parser_.parseFromString(gameBody, "text/xml");
-        const splitA = xmlGameDoc.rawHTML.split("<b>First pitch</b>: ");
-        const splitB = splitA.length > 1 ? splitA[1].split(".") : [];
-        const gameStartTime = splitB.length ? splitB[0] : game.attributes[3].value;
         const splitX = xmlGameDoc.rawHTML.split("<b>T</b>: ");
         const splitY = splitX.length > 1 ? splitX[1].split(".") : [];
         const gameLength = splitY.length ? splitY[0] : null;
+
         if (gameLength && customTimeAdder(gameStartTime, gameLength, roundUp) >= 24) shouldFakeDate = true;
       })
     );
