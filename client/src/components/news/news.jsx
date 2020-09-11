@@ -54,7 +54,7 @@ export function News() {
       <br />
       <p style={{ fontSize: "12px", margin: "0 64px 2vw 104px" }}>
         It is not my intention to be misusing the NYT API. The purpose of this page is for technical experimentation and
-        to share interesting content. All articles are linked.
+        to share interesting content.
       </p>
     </div>
   );
