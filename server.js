@@ -380,10 +380,6 @@ if (process.env.NODE_ENV === "production") {
     next();
   });
 
-  app.get("/.well-known/pki-validation/AN2D4C5H7F01823KRIDHJ.txt", (_req, res) => {
-    return res.send("613AEE7D1402F7F327CA8BF9D15498B76E4E746D799D25ACF15A603BFB5EED0A comodoca.com 5f5bdb7370f92");
-  });
-
   // Serve any static files
   app.use(express.static(path.join(__dirname, "client/build")));
 
