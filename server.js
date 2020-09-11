@@ -30,14 +30,14 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     if (date.day === "01") {
       tmpMonth = String(date.month - 1).padStart(2, "0");
       const monthMapping = {
-        "3": 31,
-        "4": 30,
-        "5": 31,
-        "6": 30,
-        "7": 31,
-        "8": 31,
-        "9": 30,
-        "10": 31,
+        3: 31,
+        4: 30,
+        5: 31,
+        6: 30,
+        7: 31,
+        8: 31,
+        9: 30,
+        10: 31,
       };
       tmpDay = monthMapping[tmpMonth];
     } else {
@@ -70,7 +70,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
     await Promise.all(
       games_.map(async (game) => {
         const gameId = game.attributes[0].value;
-        let gameStartTime = game.attributes[3].value;
+        const gameStartTime = game.attributes[3].value;
         // Get game data
         const gameBody = await requestPromise(baseUrl_ + `/gid_${gameId}/boxscore.xml`).catch((error) => {
           console.log("Unable to get MLB API game data with error:", error);
@@ -298,6 +298,55 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
       res.send(gameInfo);
     }
   );
+});
+
+app.get("/api/climate-articles", async (req, res) => {
+  const baseUrl = "https://api.nytimes.com/svc/topstories/v2/climate.json?api-key=";
+  if (process.env.NODE_ENV === "production") {
+    await requestPromise(baseUrl + process.env.NYT_API_KEY).then((resp) => {
+      const body = JSON.parse(resp);
+      const selectedArticles = [];
+      // Add one random article
+      let len = body.results.length;
+      let randomIndex = Math.floor(Math.random() * Math.floor(len));
+      selectedArticles.push(body.results.splice(randomIndex, 1)[0]);
+      // Add another random article
+      len = body.results.length;
+      randomIndex = Math.floor(Math.random() * Math.floor(len));
+      selectedArticles.push(body.results.splice(randomIndex, 1)[0]);
+      // Add a third random article
+      len = body.results.length;
+      randomIndex = Math.floor(Math.random() * Math.floor(len));
+      selectedArticles.push(body.results.splice(randomIndex, 1)[0]);
+      // Return articles
+      return res.send(selectedArticles);
+    });
+  } else {
+    fs.readFile("local.env", "utf-8", async (error, data) => {
+      if (error) {
+        console.log("Unable to read environment variable:", error);
+        throw error;
+      }
+      await requestPromise(baseUrl + data.split('"')[3]).then((resp) => {
+        const body = JSON.parse(resp);
+        const selectedArticles = [];
+        // Add one random article
+        let len = body.results.length;
+        let randomIndex = Math.floor(Math.random() * Math.floor(len));
+        selectedArticles.push(body.results.splice(randomIndex, 1)[0]);
+        // Add another random article
+        len = body.results.length;
+        randomIndex = Math.floor(Math.random() * Math.floor(len));
+        selectedArticles.push(body.results.splice(randomIndex, 1)[0]);
+        // Add a third random article
+        len = body.results.length;
+        randomIndex = Math.floor(Math.random() * Math.floor(len));
+        selectedArticles.push(body.results.splice(randomIndex, 1)[0]);
+        // Return articles
+        return res.send(selectedArticles);
+      });
+    });
+  }
 });
 
 if (process.env.NODE_ENV === "production") {

@@ -1,0 +1,46 @@
+.image {
+  grid-area: image;
+  width: 400px;
+}
+.title {
+  grid-area: title;
+  margin: 0;
+}
+.abstract {
+  grid-area: abstract;
+  margin: 0;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    "title image"
+    "abstract image";
+  grid-gap: 8px;
+  margin: 0 20px;
+}
+
+.grid-container-inverse {
+  display: grid;
+  grid-template-areas:
+    "image title"
+    "image abstract";
+  grid-gap: 8px;
+  margin: 0 20px;
+}
+
+@media only screen and (max-width: 675px) {
+  .image {
+    width: 55vw;
+  }
+  .grid-container {
+    grid-template-areas:
+      "title image"
+      "abstract abstract";
+  }
+  .grid-container-inverse {
+    grid-template-areas:
+      "image title"
+      "abstract abstract";
+  }
+}

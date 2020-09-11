@@ -1,12 +1,13 @@
 .app {
   text-align: center;
   overflow-x: hidden;
-  min-height: 100vh; // Why is this here?
+  min-height: 100vh;
   &.dark-mode {
     background-color: #050505;
     h1,
     h2,
-    h3 {
+    h3,
+    p {
       color: whitesmoke;
     }
   }

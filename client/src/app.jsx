@@ -10,6 +10,7 @@ import { Math } from "./components/math/math";
 import { Baseball } from "./components/baseball/baseball";
 import { ChessComp } from "./components/chess/chess";
 import { ChessData } from "./components/chess/chess-data";
+import { News } from "./components/news/news";
 import { Writing } from "./components/writing/writing";
 import { Maps } from "./components/maps/maps";
 import { Icons } from "./components/widgets/icons";
@@ -42,6 +43,9 @@ export function App() {
           </Route>
           <Route path="/chess-data">
             <ChessData />
+          </Route>
+          <Route path="/news">
+            <News />
           </Route>
           <Route path="/writing">
             <Writing />

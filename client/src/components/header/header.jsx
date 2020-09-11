@@ -41,6 +41,11 @@ export function Header() {
               </div>
             </span>
           </li>
+          <li>
+            <Link className="link" to="/news">
+              News
+            </Link>
+          </li>
           {/* <li>
             <Link className="link" to="/math">
               Writing
