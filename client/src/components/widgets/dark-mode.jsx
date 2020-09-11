@@ -26,11 +26,9 @@ export function DarkMode() {
   };
 
   return (
-    <Switch
-      checked={isDarkMode}
-      className="dark-mode-switch"
-      onChange={handleSwitch}
-    />
+    <span className="dark-mode-switch">
+      <Switch checked={isDarkMode} onChange={handleSwitch} />
+    </span>
   );
 }
 
