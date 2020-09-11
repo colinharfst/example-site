@@ -21,7 +21,9 @@ export function News() {
       <br />
       <div className="grid-container">
         <h2 className="title">
-          <a href={articles[0].url}>{articles[0].title}</a>
+          <a href={articles[0].url} target="_blank" rel="noopener noreferrer">
+            {articles[0].title}
+          </a>
         </h2>
         <h3 className="abstract">{articles[0].abstract}</h3>
         <img className="image" src={articles[0].multimedia[0].url} alt={articles[0].multimedia[0].caption} />
@@ -30,7 +32,9 @@ export function News() {
       <br />
       <div className="grid-container-inverse">
         <h2 className="title">
-          <a href={articles[1].url}>{articles[1].title}</a>
+          <a href={articles[1].url} target="_blank" rel="noopener noreferrer">
+            {articles[1].title}
+          </a>
         </h2>
         <h3 className="abstract">{articles[1].abstract}</h3>
         <img className="image" src={articles[1].multimedia[0].url} alt={articles[1].multimedia[0].caption} />
@@ -39,7 +43,9 @@ export function News() {
       <br />
       <div className="grid-container">
         <h2 className="title">
-          <a href={articles[2].url}>{articles[2].title}</a>
+          <a href={articles[2].url} target="_blank" rel="noopener noreferrer">
+            {articles[2].title}
+          </a>
         </h2>
         <h3 className="abstract">{articles[2].abstract}</h3>
         <img className="image" src={articles[2].multimedia[0].url} alt={articles[2].multimedia[0].caption} />
