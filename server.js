@@ -383,7 +383,7 @@ if (process.env.NODE_ENV === "production") {
   // Serve any static files
   app.use(express.static(path.join(__dirname, "client/build")));
 
-  app.use((req, res, next) => {
+  app.use("*", (req, res, next) => {
     if (req.secure) {
       // Request was via https, so do no special handling
       next();
