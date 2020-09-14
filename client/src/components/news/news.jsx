@@ -50,12 +50,6 @@ export function News() {
         <h3 className="abstract">{articles[2].abstract}</h3>
         <img className="image" src={articles[2].multimedia[0].url} alt={articles[2].multimedia[0].caption} />
       </div>
-      {/* <br />
-      <br />
-      <p style={{ fontSize: "12px", margin: "0 64px 2vw 104px" }}>
-        It is not my intention to be misusing the NYT API. The purpose of this page is for technical experimentation and
-        to share interesting content.
-      </p> */}
     </div>
   );
 }
