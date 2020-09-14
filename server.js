@@ -352,6 +352,7 @@ app.get("/api/climate-articles", async (req, res) => {
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
   app.use((_req, _res, next) => {
+    console.log(path.join(__dirname, "client/build"));
     express.static(path.join(__dirname, "client/build"));
     next();
   });
@@ -361,6 +362,7 @@ if (process.env.NODE_ENV === "production") {
       // Request was via https, so do no special handling
       next();
     } else {
+      console.log("https://" + req.hostname + req.url);
       // Request was via http, so redirect to https
       res.redirect("https://" + req.hostname + req.url);
     }
@@ -370,11 +372,11 @@ if (process.env.NODE_ENV === "production") {
     // Using these so that when Kaffeine pings Heroku, MongoDB is updated
     // https://kaffeine.herokuapp.com/
     if (req.path !== "/") return next();
-    request("https://www.colinharfst.com/api/live-baseball/nyamlb/592450");
-    request("https://www.colinharfst.com/api/live-baseball/nyamlb/519317");
-    request("https://www.colinharfst.com/api/live-baseball/nyamlb/650402");
-    request("https://www.colinharfst.com/api/live-baseball/houmlb/514888");
-    request("https://www.colinharfst.com/api/live-baseball/phimlb/544369");
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
+    request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
+    request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
     // Using this so that when Kaffeine pings Heroku, Lichess data is updated
     // https://kaffeine.herokuapp.com/
     request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
