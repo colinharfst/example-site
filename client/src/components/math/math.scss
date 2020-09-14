@@ -13,7 +13,7 @@
       height: auto;
       border: 1.5px solid black;
       border-radius: 4px;
-      margin: 0 4px 16px 4px;
+      margin: 0 4px 0px 4px;
     }
   }
   &.dark-mode {
@@ -25,6 +25,11 @@
     .research-pdf-wrapper {
       // Related to line-height of 1.35 in header.scss
       height: calc(100vh - (1.35 * (60px + 12vmin)) - 31.5px);
+      a:first-of-type {
+        img {
+          margin-bottom: 16px;
+        }
+      }
       img {
         width: 65vw;
       }
