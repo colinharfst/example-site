@@ -85,8 +85,6 @@ export function ChessComp() {
           width={320}
           id="random"
           position={position}
-          // TODO: Figure out how to pass orientation from gameData
-          // orientation={gameData.orientation}
           draggable={false}
           transitionDuration={300}
           boardStyle={{
@@ -97,7 +95,6 @@ export function ChessComp() {
       )}
     </SetRandomGame>
   );
-  // }
 }
 
 export default ChessComp;
