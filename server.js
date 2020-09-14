@@ -351,15 +351,19 @@ app.get("/api/climate-articles", async (req, res) => {
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
-  app.use(express.static(path.join(__dirname, "client/build")));
+  app.use((_req, _res, next) => {
+    express.static(path.join(__dirname, "client/build"));
+    next();
+  });
 
-  app.all("*", (req, res, next) => {
+  app.use((req, res, next) => {
     if (req.secure) {
       // Request was via https, so do no special handling
-      return next();
+      next();
+    } else {
+      // Request was via http, so redirect to https
+      res.redirect("https://" + req.hostname + req.url);
     }
-    // Request was via http, so redirect to https
-    res.redirect("https://" + req.hostname + req.url);
   });
 
   app.use("/", (req, _res, next) => {
