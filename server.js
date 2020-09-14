@@ -350,15 +350,25 @@ app.get("/api/climate-articles", async (req, res) => {
 });
 
 if (process.env.NODE_ENV === "production") {
+  app.use("*", (req, res, next) => {
+    if (req.secure) {
+      // Request was via https, so do no special handling
+      next();
+    } else {
+      // Request was via http, so redirect to https
+      res.redirect("https://" + req.headers.host + req.url);
+    }
+  });
+
   app.use("/", (req, _res, next) => {
     // Using these so that when Kaffeine pings Heroku, MongoDB is updated
     // https://kaffeine.herokuapp.com/
     if (req.path !== "/") return next();
-    request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
-    request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
-    request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
-    request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
-    request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
+    request("https://www.colinharfst.com/api/live-baseball/nyamlb/592450");
+    request("https://www.colinharfst.com/api/live-baseball/nyamlb/519317");
+    request("https://www.colinharfst.com/api/live-baseball/nyamlb/650402");
+    request("https://www.colinharfst.com/api/live-baseball/houmlb/514888");
+    request("https://www.colinharfst.com/api/live-baseball/phimlb/544369");
     // Using this so that when Kaffeine pings Heroku, Lichess data is updated
     // https://kaffeine.herokuapp.com/
     request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
