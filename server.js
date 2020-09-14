@@ -350,16 +350,6 @@ app.get("/api/climate-articles", async (req, res) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  app.use("*", (req, res, next) => {
-    if (req.secure) {
-      // Request was via https, so do no special handling
-      next();
-    } else {
-      // Request was via http, so redirect to https
-      res.redirect("https://" + req.headers.host + req.url);
-    }
-  });
-
   app.use("/", (req, _res, next) => {
     // Using these so that when Kaffeine pings Heroku, MongoDB is updated
     // https://kaffeine.herokuapp.com/
@@ -392,6 +382,16 @@ if (process.env.NODE_ENV === "production") {
 
   // Serve any static files
   app.use(express.static(path.join(__dirname, "client/build")));
+
+  app.use((req, res, next) => {
+    if (req.secure) {
+      // Request was via https, so do no special handling
+      next();
+    } else {
+      // Request was via http, so redirect to https
+      res.redirect("https://" + req.headers.host + req.url);
+    }
+  });
 
   // Handle React routing, return all requests to React app
   app.get("*", (_req, res) => {
