@@ -356,7 +356,7 @@ if (process.env.NODE_ENV === "production") {
       return next();
     }
     // Request was via http, so redirect to https
-    res.redirect("https://" + req.hostname + ":" + app.get("secPort") + req.url);
+    res.redirect("https://" + req.hostname + req.url);
   });
 
   app.use("/", (req, _res, next) => {
