@@ -16,7 +16,7 @@ export function News() {
   }
   console.log(articles);
   return (
-    <div className="climate-articles">
+    <div className="climate-articles" style={{ marginBottom: "60px" }}>
       <h2>Here are some recent articles from the New York Times on the climate and environment.</h2>
       <br />
       <div className="grid-container">
@@ -41,7 +41,7 @@ export function News() {
       </div>
       <br />
       <br />
-      <div className="grid-container">
+      <div className="grid-container last">
         <h2 className="title">
           <a href={articles[2].url} target="_blank" rel="noopener noreferrer">
             {articles[2].title}
@@ -50,12 +50,12 @@ export function News() {
         <h3 className="abstract">{articles[2].abstract}</h3>
         <img className="image" src={articles[2].multimedia[0].url} alt={articles[2].multimedia[0].caption} />
       </div>
-      <br />
+      {/* <br />
       <br />
       <p style={{ fontSize: "12px", margin: "0 64px 2vw 104px" }}>
         It is not my intention to be misusing the NYT API. The purpose of this page is for technical experimentation and
         to share interesting content.
-      </p>
+      </p> */}
     </div>
   );
 }
