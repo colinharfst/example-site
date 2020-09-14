@@ -350,6 +350,9 @@ app.get("/api/climate-articles", async (req, res) => {
 });
 
 if (process.env.NODE_ENV === "production") {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, "client/build")));
+
   app.all("*", (req, res, next) => {
     if (req.secure) {
       // Request was via https, so do no special handling
@@ -388,9 +391,6 @@ if (process.env.NODE_ENV === "production") {
     });
     next();
   });
-
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, "client/build")));
 
   // Handle React routing, return all requests to React app
   app.get("*", (_req, res) => {
