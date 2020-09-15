@@ -363,13 +363,12 @@ if (process.env.NODE_ENV === "production") {
   });
 
   app.use((req, res, next) => {
-    if (req.secure || req.url.includes("favicon") || req.url.includes("manifest")) {
+    if (req.secure || req.url.includes("favicon") || req.url.includes("manifest") || req.url.includes("/static/")) {
       // Request was via https, so do no special handling
-      next();
-    } else {
-      // Request was via http, so redirect to https
-      res.redirect("https://" + req.hostname + req.url);
+      return next();
     }
+    // Request was via http, so redirect to https
+    res.redirect("https://" + req.hostname + req.url);
   });
 
   // Serve any static files
