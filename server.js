@@ -300,36 +300,7 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
-app.get("/api/update-stored-values", (_req, res) => {
-  // Using these so that when Kaffeine pings Heroku, MongoDB is updated
-  // https://kaffeine.herokuapp.com/
-  request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
-  request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
-  request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
-  request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
-  request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
-  // Using this so that when Kaffeine pings Heroku, Lichess data is updated
-  // https://kaffeine.herokuapp.com/
-  request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
-    if (error) {
-      console.log("Lichess connection failed with error:", error);
-      throw error;
-    }
-    if (body) {
-      fs.writeFile("text-data/lichess-data.txt", body, (error) => {
-        if (error) {
-          console.log("Failed to save Lichess data with error:", error);
-          throw error;
-        } else {
-          console.log("Stored latest Lichess data");
-        }
-      });
-    }
-    return res.send("Stored latest Lichess data");
-  });
-});
-
-app.get("/api/climate-articles", async (_req, res) => {
+app.get("/api/climate-articles", async (req, res) => {
   const baseUrl = "https://api.nytimes.com/svc/topstories/v2/climate.json?api-key=";
   if (process.env.NODE_ENV === "production") {
     await requestPromise(baseUrl + process.env.NYT_API_KEY).then((resp) => {
@@ -381,7 +352,13 @@ app.get("/api/climate-articles", async (_req, res) => {
 if (process.env.NODE_ENV === "production") {
   app.use("/", (req, _res, next) => {
     if (req.path !== "/") return next();
-    request("http://www.colinharfst.com/api/update-stored-values");
+    // Using these so that when Kaffeine pings Heroku, MongoDB is updated
+    // https://kaffeine.herokuapp.com/
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/519317");
+    request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
+    request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
+    request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
     next();
   });
 
@@ -433,4 +410,23 @@ app.listen(port, () => {
       connect(data.split('"')[1]);
     });
   }
+
+  // Update Lichess data each time app is loaded
+  // (having in app.use and app.get was creating race conditions and timeouts)
+  request("https://lichess.org/api/games/user/cph5wr", (error, _response, body) => {
+    if (error) {
+      console.log("Lichess connection failed with error:", error);
+      throw error;
+    }
+    if (body) {
+      fs.writeFile("text-data/lichess-data.txt", body, (error) => {
+        if (error) {
+          console.log("Failed to save Lichess data with error:", error);
+          throw error;
+        } else {
+          console.log("Stored latest Lichess data");
+        }
+      });
+    }
+  });
 });
