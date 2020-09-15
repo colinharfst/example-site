@@ -300,7 +300,7 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
-app.get("/api/climate-articles", async (req, res) => {
+app.get("/api/climate-articles", async (_req, res) => {
   const baseUrl = "https://api.nytimes.com/svc/topstories/v2/climate.json?api-key=";
   if (process.env.NODE_ENV === "production") {
     await requestPromise(baseUrl + process.env.NYT_API_KEY).then((resp) => {
