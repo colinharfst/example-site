@@ -300,7 +300,7 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
   );
 });
 
-app.get("/api/update-stored-values", (_req, _res) => {
+app.get("/api/update-stored-values", (_req, res) => {
   // Using these so that when Kaffeine pings Heroku, MongoDB is updated
   // https://kaffeine.herokuapp.com/
   request("http://www.colinharfst.com/api/live-baseball/nyamlb/592450");
@@ -325,6 +325,7 @@ app.get("/api/update-stored-values", (_req, _res) => {
         }
       });
     }
+    return res.send();
   });
 });
 
