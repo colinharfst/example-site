@@ -325,7 +325,7 @@ app.get("/api/update-stored-values", (_req, res) => {
         }
       });
     }
-    return res.send();
+    return res.send("Stored latest Lichess data");
   });
 });
 
