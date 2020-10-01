@@ -39,7 +39,7 @@ app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
         9: 30,
         10: 31,
       };
-      tmpDay = monthMapping[tmpMonth];
+      tmpDay = monthMapping[date.month - 1];
     } else {
       tmpMonth = date.month;
       tmpDay = String(date.day - 1).padStart(2, "0");
