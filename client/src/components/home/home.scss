@@ -1,12 +1,46 @@
 .home-text {
-  display: flex;
-  flex-direction: column;
-  text-align: start;
-  margin: 20px 40px 60px 40px;
+  background-color: white;
+  border: 1.5px solid #7d7d7d;
+  transform: rotate(15deg) translate(-90px, -10px);
+  max-width: 450px;
+  margin: 20px auto;
+  padding: 0 10px;
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    background-color: white;
+    border: 1.5px solid #7d7d7d;
+    border-width: 1.5px 1.5px 0 0;
+    transform: translate(-50%) rotate(-45deg);
+    width: 15px;
+    height: 15px;
+  }
+}
+.app.dark-mode {
+  .home-text {
+    background-color: whitesmoke;
+    border-color: #050505;
+    &::before {
+      background-color: whitesmoke;
+      border-color: #050505;
+    }
+    h3 {
+      color: #050505;
+    }
+  }
 }
 
 @media only screen and (max-width: 675px) {
   .home-text {
-    margin: 20px 20px 60px 20px;
+    transform: rotate(15deg) translate(-60px, -10px);
+    margin-left: 75px;
+    margin-bottom: 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .home-text::before {
+    left: 30%;
   }
 }
