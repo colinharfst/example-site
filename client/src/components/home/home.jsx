@@ -11,6 +11,7 @@ export function Home() {
       <img
         src={Math.floor(Math.random() * 2) ? self : selfie}
         alt={Math.floor(Math.random() * 2) ? "not a selfie" : "a selfie"}
+        style={{ marginTop: "4px" }}
         height={250}
       />
       <div className="home-text">
