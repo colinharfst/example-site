@@ -363,7 +363,13 @@ if (process.env.NODE_ENV === "production") {
   });
 
   app.use((req, res, next) => {
-    if (req.secure || req.url.includes("favicon") || req.url.includes("manifest") || req.url.includes("/static/")) {
+    if (
+      req.secure ||
+      req.header("X-Forwarded-Proto") === "https" ||
+      req.url.includes("favicon") ||
+      req.url.includes("manifest") ||
+      req.url.includes("/static/")
+    ) {
       // Request was via https, so do no special handling
       return next();
     }
