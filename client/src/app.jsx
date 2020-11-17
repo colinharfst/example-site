@@ -7,6 +7,7 @@ import { Header } from "./components/header/header";
 import { Home } from "./components/home/home";
 import { Resume } from "./components/resume/resume";
 import { Math } from "./components/math/math";
+import { MonteCarlo } from "./components/math/monte-carlo";
 import { Baseball } from "./components/baseball/baseball";
 import { ChessComp } from "./components/chess/chess";
 import { ChessData } from "./components/chess/chess-data";
@@ -31,6 +32,9 @@ export function App() {
           </Route>
           <Route path="/math">
             <Math />
+          </Route>
+          <Route path="/simulation">
+            <MonteCarlo />
           </Route>
           <Route path="/baseball">
             <Baseball />

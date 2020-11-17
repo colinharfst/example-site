@@ -19,9 +19,17 @@ export function Header() {
             </Link>
           </li>
           <li>
-            <Link className="link" to="/math">
+            <span className="link">
               Math
-            </Link>
+              <div className="sublinks">
+                <Link className="link" to="/math">
+                  Research
+                </Link>
+                <Link className="link" to="/simulation">
+                  Monte Carlo
+                </Link>
+              </div>
+            </span>
           </li>
           <li>
             <Link className="link" to="/baseball">
@@ -46,16 +54,6 @@ export function Header() {
               News
             </Link>
           </li>
-          {/* <li>
-            <Link className="link" to="/math">
-              Writing
-            </Link>
-          </li>
-          <li>
-            <Link className="link" to="/math">
-              Maps
-            </Link>
-          </li> */}
         </ul>
       </nav>
       <img src={logo} className="app-logo" alt="logo" />
