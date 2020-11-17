@@ -2,8 +2,16 @@
 
 .chess-data {
   margin-bottom: 60px;
+  position: relative;
   circle {
     visibility: hidden;
     cursor: pointer;
+  }
+  .vert-line {
+    position: absolute;
+    left: 0;
+    bottom: 41px;
+    height: 348px;
+    border-left: 1.5px solid #047695;
   }
 }

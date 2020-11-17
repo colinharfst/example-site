@@ -23,6 +23,7 @@ module.exports = {
     // startTime = "06:05 pm"
     // duration = "3:20"
     // duration (with delay) = "3:20 (1:10 delay)"
+    console.log(startTime, duration, roundUp);
     const startTimeSplit1 = startTime.split(" ");
     const startTimeSplit2 = startTimeSplit1[0].split(":");
     const durationSplit = duration.includes("delay") ? duration.split(" ")[0].split(":") : duration.split(":");

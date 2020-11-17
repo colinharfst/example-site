@@ -26,7 +26,13 @@ export function News() {
           </a>
         </h2>
         <h3 className="abstract">{articles[0].abstract}</h3>
-        <img className="image" src={articles[0].multimedia[0].url} alt={articles[0].multimedia[0].caption} />
+        <div className="image">
+          <img
+            src={articles[0].multimedia[0].url}
+            alt={articles[0].multimedia[0].caption}
+            width={articles[0].multimedia[0].width < 400 ? articles[0].multimedia[0].width : null}
+          />
+        </div>
       </div>
       <br />
       <br />
@@ -37,7 +43,13 @@ export function News() {
           </a>
         </h2>
         <h3 className="abstract">{articles[1].abstract}</h3>
-        <img className="image" src={articles[1].multimedia[0].url} alt={articles[1].multimedia[0].caption} />
+        <div className="image">
+          <img
+            src={articles[1].multimedia[0].url}
+            alt={articles[1].multimedia[0].caption}
+            width={articles[1].multimedia[0].width < 400 ? articles[1].multimedia[0].width : null}
+          />
+        </div>
       </div>
       <br />
       <br />
@@ -48,8 +60,16 @@ export function News() {
           </a>
         </h2>
         <h3 className="abstract">{articles[2].abstract}</h3>
-        <img className="image" src={articles[2].multimedia[0].url} alt={articles[2].multimedia[0].caption} />
+        <div className="image">
+          <img
+            src={articles[2].multimedia[0].url}
+            alt={articles[2].multimedia[0].caption}
+            width={articles[2].multimedia[0].width < 400 ? articles[2].multimedia[0].width : null}
+          />
+        </div>
       </div>
+      <br />
+      <br />
     </div>
   );
 }

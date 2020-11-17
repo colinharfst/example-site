@@ -3,6 +3,7 @@ import "./chess-data.scss";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { XYPlot, XAxis, YAxis, HorizontalGridLines, LineMarkSeries } from "react-vis";
 import { useHistory } from "react-router-dom";
+import _ from "lodash";
 
 export function ChessData() {
   document.title = "Chess Data";
@@ -11,6 +12,7 @@ export function ChessData() {
   const [gameData, setGameData] = useState(null);
   const [xAxisTicks, setXAxisTicks] = useState([]);
   const [vw, setViewWidth] = useState(Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0));
+  const [leftwards, setLeftwards] = useState(0);
 
   useEffect(() => {
     loadGameData();
@@ -55,7 +57,13 @@ export function ChessData() {
     return <CircularProgress style={{ margin: "40px", color: "#282c34" }} />;
   }
   return (
-    <div className="chess-data">
+    <div
+      className="chess-data"
+      onMouseMove={(event) => {
+        const l = event.clientX;
+        _.throttle(() => setLeftwards(l), 20)();
+      }}
+    >
       <h3>Click along the graph below to see a game from that stretch of time.</h3>
       <XYPlot width={vw} height={400} yDomain={[1075, 1600]} margin={{ left: 45, right: 20, top: 10, bottom: 40 }}>
         <XAxis
@@ -72,14 +80,16 @@ export function ChessData() {
           data={gameData}
           lineStyle={{ stroke: "#047695" }}
           size={6}
-          onNearestX={(value, { event, innerX, index }) => {
-            // console.log(value, innerX, index);
-          }}
-          onValueClick={(datapoint, event) => {
+          // onNearestX={_.throttle((value, { event, innerX, index }) => {
+          //   setLeftwards(event.clientX);
+          //   console.log(value, event, innerX, index);
+          // }, 100)}
+          onValueClick={(datapoint, _event) => {
             history.push(`/chess-game/${datapoint.x.toISOString()}`);
           }}
         />
       </XYPlot>
+      <div className="vert-line" style={{ left: leftwards }} />
     </div>
   );
 }
