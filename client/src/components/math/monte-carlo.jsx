@@ -62,7 +62,7 @@ export function MonteCarlo() {
 
       let sqCount = 0;
       let circCount = 0;
-      const timeout = 100;
+      const timeout = 25;
 
       const fillPoint = (i) => {
         if (i < len) {
@@ -137,7 +137,7 @@ export function MonteCarlo() {
 
       let sqCount = squareCount;
       let circCount = circleCount;
-      const timeout = 100;
+      const timeout = 25;
 
       const fillPoint = (i) => {
         const modifiedIndex = i - totalCount;
