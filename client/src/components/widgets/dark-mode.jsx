@@ -6,10 +6,10 @@ export function DarkMode() {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
-    if (window.localStorage.getItem("dark-mode") === "dark") {
+    if (window.localStorage.getItem("dark-mode") === "light") {
       const elem = document.getElementsByClassName("app")[0];
-      elem.className = "app dark-mode";
-      setIsDarkMode(true);
+      elem.className = "app";
+      setIsDarkMode(false);
     }
   }, []);
 
