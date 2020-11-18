@@ -45,9 +45,9 @@ export function MonteCarlo() {
 
       const inSquare = (x, y) => {
         if (
-          x + 1 > squareTopLeftCorner.x &&
+          x + 1 >= squareTopLeftCorner.x &&
           x + 1 <= squareTopLeftCorner.x + radius &&
-          y + 1 > squareTopLeftCorner.y &&
+          y + 1 >= squareTopLeftCorner.y &&
           y + 1 <= squareTopLeftCorner.y + radius
         )
           return true;
