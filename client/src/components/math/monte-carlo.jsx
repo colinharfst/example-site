@@ -169,7 +169,7 @@ export function MonteCarlo() {
         <h3>Monte Carlo</h3>
       </canvas>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <button onClick={() => clearTimeout(timeoutFunction.current)}>
+        <button tabIndex={0} onClick={() => clearTimeout(timeoutFunction.current)}>
           <PauseIcon />
         </button>
         <span style={{ width: "300px" }}>
@@ -178,7 +178,7 @@ export function MonteCarlo() {
           <h3>Circle Count: {circleCount}</h3>
           <h3>Mysterious Ratio: {calcPi(circleCount / squareCount)}</h3>
         </span>
-        <button onClick={() => restartRandomFilling()}>
+        <button tabIndex={0} onClick={() => restartRandomFilling()}>
           <PlayArrowIcon />
         </button>
       </div>

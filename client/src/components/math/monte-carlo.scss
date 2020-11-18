@@ -2,7 +2,8 @@
   button {
     background: none;
     border: none;
-    outline: none;
+    height: max-content;
+    margin: auto 0;
     &:hover,
     &:focus {
       cursor: pointer;

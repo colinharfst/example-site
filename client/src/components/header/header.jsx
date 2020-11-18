@@ -19,7 +19,20 @@ export function Header() {
             </Link>
           </li>
           <li>
-            <span className="link">
+            <span
+              className="link"
+              tabIndex={0}
+              onKeyDownCapture={(event) => {
+                if (event.keyCode === 13) {
+                  document.getElementsByClassName("sublinks")[0].classList.add("clicked-open");
+                }
+              }}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  document.getElementsByClassName("sublinks")[0].classList.remove("clicked-open");
+                }
+              }}
+            >
               Math
               <div className="sublinks">
                 <Link className="link" to="/math">
@@ -37,7 +50,20 @@ export function Header() {
             </Link>
           </li>
           <li>
-            <span className="link">
+            <span
+              className="link"
+              tabIndex={0}
+              onKeyDownCapture={(event) => {
+                if (event.keyCode === 13) {
+                  document.getElementsByClassName("sublinks")[1].classList.add("clicked-open");
+                }
+              }}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  document.getElementsByClassName("sublinks")[1].classList.remove("clicked-open");
+                }
+              }}
+            >
               Chess
               <div className="sublinks">
                 <Link className="link" to="/chess">
