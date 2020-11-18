@@ -1,0 +1,21 @@
+.app {
+  button {
+    background: none;
+    border: none;
+    outline: none;
+    &:hover,
+    &:focus {
+      cursor: pointer;
+    }
+    .MuiSvgIcon-root {
+      color: #050505;
+    }
+  }
+}
+.app.dark-mode {
+  button {
+    .MuiSvgIcon-root {
+      color: whitesmoke;
+    }
+  }
+}
