@@ -23,7 +23,7 @@ export function App() {
   console.log(" / \\ ");
 
   return (
-    <div className="app">
+    <div className="app dark-mode">
       <Router>
         <Header />
         <Switch>

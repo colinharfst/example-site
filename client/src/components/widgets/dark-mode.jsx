@@ -3,7 +3,7 @@ import "./dark-mode.scss";
 import Switch from "@material-ui/core/Switch";
 
 export function DarkMode() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
     if (window.localStorage.getItem("dark-mode") === "dark") {
