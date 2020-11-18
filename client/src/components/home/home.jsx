@@ -2,14 +2,14 @@ import React from "react";
 import "./home.scss";
 import self from "./self.png";
 import selfie from "./selfie.png";
-import Signature from "../widgets/signature";
+// import Signature from "../widgets/signature";
 
 export function Home() {
   document.title = "Colin Harfst - Home";
 
   return (
     <>
-      <Signature />
+      {/* <Signature /> */}
       <div>
         <img
           src={Math.floor(Math.random() * 2) ? self : selfie}

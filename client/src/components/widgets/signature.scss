@@ -1,0 +1,19 @@
+svg {
+  g {
+    path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation-name: squiggle;
+      animation-duration: 4s;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+@keyframes squiggle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
