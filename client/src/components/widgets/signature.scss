@@ -1,26 +1,22 @@
 svg.signature {
   margin: 30px;
-  g {
-    path {
-      stroke: #050505;
-      stroke-width: 2;
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
-      animation-name: squiggle;
-      animation-duration: 4s;
-      animation-timing-function: linear;
-      animation-fill-mode: forwards;
-      animation-iteration-count: infinite;
-    }
+  path {
+    stroke: #050505;
+    stroke-width: 2;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation-name: squiggle;
+    animation-duration: 4s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
   }
 }
 
 .app.dark-mode {
   svg.signature {
-    g {
-      path {
-        stroke: #d3d3d3;
-      }
+    path {
+      stroke: #d3d3d3;
     }
   }
 }
