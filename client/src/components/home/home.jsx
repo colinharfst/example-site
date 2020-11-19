@@ -2,21 +2,23 @@ import React from "react";
 import "./home.scss";
 import self from "./self.png";
 import selfie from "./selfie.png";
-// import Signature from "../widgets/signature";
+import Signature from "../widgets/signature";
 
 export function Home() {
   document.title = "Colin Harfst - Home";
 
   return (
     <>
-      {/* <Signature /> */}
       <div>
-        <img
-          src={Math.floor(Math.random() * 2) ? self : selfie}
-          alt={Math.floor(Math.random() * 2) ? "not a selfie" : "a selfie"}
-          style={{ marginTop: "4px" }}
-          height={250}
-        />
+        <div style={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
+          <Signature />
+          <img
+            src={Math.floor(Math.random() * 1) + 1 ? self : selfie} // Only showing the professional pic
+            alt={Math.floor(Math.random() * 1) + 1 ? "not a selfie" : "a selfie"} // Only showing the professional pic
+            style={{ marginTop: "4px" }}
+            height={250}
+          />
+        </div>
         <div className="home-text">
           <h3>
             Hi! Somehow you've made it to my website. You probably know me personally or are a recruiter. In either

@@ -1,6 +1,9 @@
-svg {
+svg.signature {
+  margin: 30px;
   g {
     path {
+      stroke: #050505;
+      stroke-width: 2;
       stroke-dasharray: 1000;
       stroke-dashoffset: 1000;
       animation-name: squiggle;
@@ -12,8 +15,24 @@ svg {
   }
 }
 
+.app.dark-mode {
+  svg.signature {
+    g {
+      path {
+        stroke: #d3d3d3;
+      }
+    }
+  }
+}
+
 @keyframes squiggle {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  svg.signature {
+    margin: 30px -10px 0 10px;
   }
 }
