@@ -82,7 +82,9 @@ export function Header() {
           </li>
         </ul>
       </nav>
-      <img src={logo} className="app-logo" alt="logo" />
+      <Link className="secret-link" to="/playground" tabIndex={-1}>
+        <img src={logo} className="app-logo" alt="logo" />
+      </Link>
     </header>
   );
 }

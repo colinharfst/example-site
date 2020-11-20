@@ -12,8 +12,7 @@ import { Baseball } from "./components/baseball/baseball";
 import { ChessComp } from "./components/chess/chess";
 import { ChessData } from "./components/chess/chess-data";
 import { News } from "./components/news/news";
-import { Writing } from "./components/writing/writing";
-import { Maps } from "./components/maps/maps";
+import { Playground } from "./components/playground/playground";
 import { Icons } from "./components/widgets/icons";
 import { DarkMode } from "./components/widgets/dark-mode";
 
@@ -51,11 +50,8 @@ export function App() {
           <Route path="/news">
             <News />
           </Route>
-          <Route path="/writing">
-            <Writing />
-          </Route>
-          <Route path="/maps">
-            <Maps />
+          <Route path="/playground">
+            <Playground />
           </Route>
           <Route path="/">
             <Home />

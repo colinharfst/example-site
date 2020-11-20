@@ -64,11 +64,15 @@
         }
       }
     }
-    .app-logo {
-      max-height: 90px;
-      max-width: 90px;
-      height: 40vmin;
-      pointer-events: none;
+    .secret-link {
+      outline: none;
+      cursor: default;
+      .app-logo {
+        max-height: 90px;
+        max-width: 90px;
+        height: 40vmin;
+        pointer-events: none;
+      }
     }
   }
 
