@@ -11,7 +11,7 @@ export function Resume() {
       <object className="resume" data={resume} type="application/pdf" width="100%">
         <div style={{ marginBottom: "60px" }}>
           <h3>Click the image below to download my resume.</h3>
-          <a download="Colin-Harfst-Resume.pdf" href={resume}>
+          <a href={resume}>
             <img src={resumeImg} alt="resume" />
           </a>
         </div>

@@ -11,10 +11,10 @@ export function Math() {
     <div className="research-pdf-wrapper">
       <h3>Click the images below to download my research.</h3>
       <div style={{ marginBottom: "60px" }}>
-        <a download="Colin-Harfst-Research.pdf" href={research}>
+        <a href={research}>
           <img src={researchImg1} alt="research page 1" />
         </a>
-        <a download="Colin-Harfst-Research.pdf" href={research}>
+        <a href={research}>
           <img src={researchImg2} alt="research page 2" />
         </a>
       </div>
