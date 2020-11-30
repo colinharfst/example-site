@@ -41,6 +41,9 @@ export function Header() {
                 <Link className="link" to="/simulation">
                   Monte Carlo
                 </Link>
+                <Link className="link" to="/election">
+                  Electoral Map
+                </Link>
               </div>
             </span>
           </li>

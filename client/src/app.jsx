@@ -8,6 +8,7 @@ import { Home } from "./components/home/home";
 import { Resume } from "./components/resume/resume";
 import { Math } from "./components/math/math";
 import { MonteCarlo } from "./components/math/monte-carlo";
+import { Election } from "./components/math/election-simulation";
 import { Baseball } from "./components/baseball/baseball";
 import { ChessComp } from "./components/chess/chess";
 import { ChessData } from "./components/chess/chess-data";
@@ -35,6 +36,9 @@ export function App() {
           </Route>
           <Route path="/simulation">
             <MonteCarlo />
+          </Route>
+          <Route path="/election">
+            <Election />
           </Route>
           <Route path="/baseball">
             <Baseball />

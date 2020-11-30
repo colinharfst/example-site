@@ -9,10 +9,12 @@
     "chess.js": "^0.10.2",
     "chessboardjsx": "^2.4.2",
     "node-sass": "^4.13.1",
+    "random-z": "^3.0.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.0",
+    "react-scripts": "^3.4.4",
+    "react-usa-map": "^1.5.0",
     "react-vis": "^1.11.7",
     "serialize-javascript": "^3.1.0"
   },
