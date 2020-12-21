@@ -16,7 +16,7 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let collection;
+let collection, collection2;
 
 // API calls
 app.get("/api/live-baseball/:team/:playerId", async (req, res) => {
@@ -349,6 +349,41 @@ app.get("/api/climate-articles", async (_req, res) => {
   }
 });
 
+app.get("/api/save-climate-articles", async (_req, res) => {
+  const baseUrl = "https://api.nytimes.com/svc/topstories/v2/climate.json?api-key=";
+  if (process.env.NODE_ENV === "production") {
+    await requestPromise(baseUrl + process.env.NYT_API_KEY).then((resp) => {
+      const body = JSON.parse(resp);
+      body.results.forEach(article => {
+        collection2.findOne({ title: article.title }, (_err, result) => {
+          if (result === null) {
+            collection2.insertOne({title: article.title, abstract: article.abstract});
+          }
+        });
+      })
+      return res.send();
+    });
+  } else {
+    fs.readFile("local.env", "utf-8", async (error, data) => {
+      if (error) {
+        console.log("Unable to read environment variable:", error);
+        throw error;
+      }
+      await requestPromise(baseUrl + data.split('"')[3]).then((resp) => {
+        const body = JSON.parse(resp);
+        body.results.forEach(article => {
+          collection2.findOne({ title: article.title }, (_err, result) => {
+            if (result === null) {
+              collection2.insertOne({title: article.title, abstract: article.abstract});
+            }
+          });
+        })
+        return res.send();
+      });
+    });
+  }
+});
+
 if (process.env.NODE_ENV === "production") {
   app.use("/", (req, _res, next) => {
     if (req.path !== "/") return next();
@@ -359,6 +394,7 @@ if (process.env.NODE_ENV === "production") {
     request("http://www.colinharfst.com/api/live-baseball/nyamlb/650402");
     request("http://www.colinharfst.com/api/live-baseball/houmlb/514888");
     request("http://www.colinharfst.com/api/live-baseball/phimlb/544369");
+    request("http://www.colinharfst.com/api/save-climate-articles");
     next();
   });
 
@@ -401,6 +437,8 @@ app.listen(port, () => {
       }
       const database = client.db("mlb-player-data");
       collection = database.collection("yankees-players");
+      const database2 = client.db("climate-articles");
+      collection2 = database2.collection("climate-articles");
       console.log("Connected to MongoDB");
     });
 
