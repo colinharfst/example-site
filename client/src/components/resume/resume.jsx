@@ -1,7 +1,7 @@
 import React from "react";
 import "./resume.scss";
-import resume from "./resume-2020.pdf";
-import resumeImg from "./resume-2020.png";
+import resume from "./resume-2021.pdf";
+import resumeImg from "./resume-2021.png";
 
 export function Resume() {
   document.title = "Resume";
