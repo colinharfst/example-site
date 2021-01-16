@@ -9,6 +9,7 @@ export function MonteCarlo() {
   const [squareCount, setSquareCount] = useState(0);
   const [circleCount, setCircleCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [isFilling, setIsFilling] = useState(true);
 
   const radius = 80;
   const canvasWidth = 5.25 * radius;
@@ -104,6 +105,7 @@ export function MonteCarlo() {
   };
 
   const restartRandomFilling = () => {
+    if (isFilling) return;
     const canvas = document.getElementById("simulation");
     if (canvas.getContext) {
       const context = canvas.getContext("2d");
@@ -158,7 +160,7 @@ export function MonteCarlo() {
           timeoutFunction.current = setTimeout(() => fillPoint(++i), timeout);
         }
       };
-
+      setIsFilling(true);
       timeoutFunction.current = setTimeout(() => fillPoint(totalCount), timeout);
     }
   };
@@ -169,7 +171,10 @@ export function MonteCarlo() {
         <h3>Monte Carlo</h3>
       </canvas>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <button tabIndex={0} onClick={() => clearTimeout(timeoutFunction.current)}>
+        <button tabIndex={0} onClick={() => {
+          setIsFilling(false);
+          clearTimeout(timeoutFunction.current);
+        }}>
           <PauseIcon />
         </button>
         <span style={{ width: "300px" }}>
