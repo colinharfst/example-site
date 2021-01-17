@@ -6,4 +6,10 @@
     visibility: hidden;
     cursor: pointer;
   }
+  g.rv-xy-plot__axis--horizontal {
+    text.rv-xy-plot__axis__tick__text {
+      text-anchor: end;
+      transform: translate(6px, 10px) rotate(-30deg);
+    }
+  }
 }

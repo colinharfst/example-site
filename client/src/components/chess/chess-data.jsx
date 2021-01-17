@@ -57,7 +57,7 @@ export function ChessData() {
   return (
     <div className="chess-data">
       <h3>Click along the graph below to see a game from that stretch of time.</h3>
-      <XYPlot width={vw} height={400} yDomain={[1075, 1650]} margin={{ left: 45, right: 20, top: 10, bottom: 40 }}>
+      <XYPlot width={vw} height={400} yDomain={[1075, 1750]} margin={{ left: 40, right: 20, top: 10, bottom: 40 }}>
         <XAxis
           tickValues={xAxisTicks}
           tickFormat={(v) => {
@@ -66,7 +66,7 @@ export function ChessData() {
             return `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
           }}
         />
-        <YAxis title="ELO" tickValues={[1100, 1200, 1300, 1400, 1500, 1600]} tickFormat={(v) => parseInt(v)} />
+        <YAxis title="ELO" tickValues={[1100, 1200, 1300, 1400, 1500, 1600, 1700]} tickFormat={(v) => parseInt(v)} />
         <HorizontalGridLines />
         <LineMarkSeries
           data={gameData}

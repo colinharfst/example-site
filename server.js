@@ -280,14 +280,16 @@ app.get("/api/chess-game/:datetime", async (req, res) => {
       let gameMoves = lines[17].split(" ");
       gameMoves.pop();
       gameMoves = gameMoves.filter((x) => !x.includes("."));
+      const wasCheckmate = gameMoves[gameMoves.length - 1].includes('#');
+      const ending = wasCheckmate ? 'Checkmate' : lines[15].split('"')[1];
       const gameInfo = {
         white: lines[3],
         black: lines[4],
         result: lines[5],
         whiteElo: parseInt(lines[8].substring(11, 15)) + parseInt(lines[10].split('"')[1]),
         blackElo: parseInt(lines[9].substring(11, 15)) + parseInt(lines[11].split('"')[1]),
-        timeControl: lines[13],
-        ending: lines[15],
+        timeControl: lines[13].split('"')[1],
+        ending: ending,
         gameMoves: gameMoves,
       };
       console.log("white:", gameInfo.white);

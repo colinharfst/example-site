@@ -54,12 +54,14 @@ export function ChessComp() {
         whiteElo: game.whiteElo,
         blackElo: game.blackElo,
         timeControl: game.timeControl,
-        ending: game.ending,
+        ending: game.ending === 'Checkmate' ? 'via checkmate' : (game.ending === 'Normal' ? 'via resignation' : 'on time')
       };
       gameInfo.label =
-        gameInfo.orientation === gameInfo.winner
-          ? `A win with the ${gameInfo.orientation} pieces`
-          : `A loss with the ${gameInfo.orientation} pieces`;
+        gameInfo.winner === 'draw'
+          ? `A draw with the ${gameInfo.orientation} pieces`
+          : gameInfo.orientation === gameInfo.winner
+            ? `A win ${gameInfo.ending} with the ${gameInfo.orientation} pieces`
+            : `A loss ${gameInfo.ending} with the ${gameInfo.orientation} pieces`;
       gameInfo.sublabel1 = `Played on ${getDateString(datetime)}`;
       gameInfo.sublabel2 = `${gameInfo.orientation === gameInfo.winner ? "Putting" : "Leaving"} me at a rating of ${
         gameInfo.orientation === "white" ? gameInfo.whiteElo : gameInfo.blackElo
