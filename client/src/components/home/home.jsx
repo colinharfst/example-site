@@ -8,8 +8,7 @@ export function Home() {
   document.title = "Colin Harfst - Home";
 
   return (
-    <>
-      <div>
+      <div className="home-wrapper">
         <div style={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
           <Signature />
           <img
@@ -34,7 +33,6 @@ export function Home() {
           </h3>
         </div>
       </div>
-    </>
   );
 }
 

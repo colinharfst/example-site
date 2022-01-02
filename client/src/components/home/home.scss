@@ -1,9 +1,13 @@
+.home-wrapper {
+  overflow: hidden;
+}
+
 .home-text {
   background-color: white;
   border: 1.5px solid #7d7d7d;
   transform: rotate(15deg) translate(-40px, -10px);
   max-width: 450px;
-  margin: 20px auto;
+  margin: 20px auto 36px auto;
   padding: 0 10px;
   &::before {
     content: "";
@@ -36,6 +40,5 @@
   .home-text {
     transform: rotate(15deg) translate(-60px, -10px);
     margin-left: 100px;
-    margin-bottom: 0;
   }
 }
