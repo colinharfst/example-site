@@ -14,7 +14,7 @@ export function Icons() {
         </svg>
       </a>
       <a
-        href={"https://linkedin.com/in/colin-harfst-3654ab132/"}
+        href={"https://www.linkedin.com/in/colin-harfst-3654ab132/"}
         target="_blank"
         rel="noopener noreferrer"
       >
