@@ -5,7 +5,7 @@ export function Icons() {
   return (
     <div className="icons">
       <a
-        href={"https://github.com/colinharfst"}
+        href={"https://www.github.com/colinharfst"}
         target="_blank"
         rel="noopener noreferrer"
       >
