@@ -12,8 +12,8 @@ export function Home() {
         <div style={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
           <Signature />
           <img
-            src={Math.floor(Math.random() * 1) + 1 ? self : selfie} // Only showing the professional pic
-            alt={Math.floor(Math.random() * 1) + 1 ? "not a selfie" : "a selfie"} // Only showing the professional pic
+            src={Math.floor(Math.random() * 2) ? self : selfie}
+            alt={Math.floor(Math.random() * 2) ? "not a selfie" : "a selfie"}
             style={{ marginTop: "4px" }}
             height={250}
           />
