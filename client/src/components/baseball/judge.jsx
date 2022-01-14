@@ -59,15 +59,19 @@ export class Judge extends React.Component {
     }
   };
 
-  getLiveData = async () => {
-    const { playerId } = this.props;
-    const liveData = await fetch(
-      `/api/live-baseball/${playerId === "514888" ? "houmlb" : playerId === "544369" ? "phimlb" : "nyamlb"}/${
-        this.props.playerId
-      }`
-    ).then(async (resp) => await resp.json());
-    this.setState({ ...liveData });
-  };
+	getLiveData = async () => {
+		const { playerId } = this.props;
+		console.log("in func");
+		const liveData = await fetch(
+			`/api/live-baseball/${playerId === "514888" ? "houmlb" : playerId === "544369" ? "phimlb" : "nyamlb"}/${
+				this.props.playerId
+			}`
+		).then(async resp => {
+			if (resp.ok) return await resp.json();
+			else return { isGameToday: false };
+		});
+		this.setState({ ...liveData });
+	};
 
   getStoredData = async () => {
     const storedData = await fetch(`/api/stored-baseball/${this.props.playerId}`).then(
