@@ -400,6 +400,7 @@ if (process.env.NODE_ENV === "production") {
 
 	// vv Redirect everything to new site!
 	app.use((req, res, next) => {
+		console.log(req.url);
 		var match = req.url.match(/^\/colinharfst.com\/.+/)[0];
 		if (match) {
 			console.log("found match", match);
