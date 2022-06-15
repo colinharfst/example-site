@@ -398,21 +398,6 @@ if (process.env.NODE_ENV === "production") {
 	// 	next();
 	// });
 
-	// vv Redirect everything to new site!
-	app.use((req, res, next) => {
-		console.log(req.url);
-		var match = req.url.match(/^\/colinharfst.com\/.+/)[0];
-		if (match) {
-			console.log("found match", match);
-			res.redirect("https://www.charfst.com/?" + match);
-			return next();
-		}
-		console.log("no found match");
-		res.redirect("https://www.charfst.com");
-		return next();
-	});
-	// ^^ Redirect everything to new site!
-
 	// app.use((req, res, next) => {
 	//   if (
 	//     req.secure ||
@@ -428,9 +413,19 @@ if (process.env.NODE_ENV === "production") {
 	//   res.redirect("https://" + req.hostname + req.url);
 	// });
 
+	// vv Redirect everything to new site!
+	app.use((req, res, next) => {
+		if (req.url === "/") {
+			res.redirect("https://www.charfst.com");
+			return next();
+		}
+		res.redirect("https://www.charfst.com/?" + req.url);
+		return next();
+	});
+	// ^^ Redirect everything to new site!
+
 	// // Serve any static files
 	// app.use(express.static(path.join(__dirname, "client/build")));
-
 	// // Handle React routing, return all requests to React app
 	// app.get("*", (_req, res) => {
 	//   return res.sendFile(path.join(__dirname, "client/build", "index.html"));
