@@ -1,41 +1,45 @@
 {
-  "name": "Colin-Harfst-Personal-Website",
-  "version": "1.0.0",
-  "private": true,
-  "proxy": "http://localhost:5000/",
-  "dependencies": {
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
-    "chess.js": "^0.10.3",
-    "chessboardjsx": "^2.4.2",
-    "node-sass": "^4.13.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.4",
-    "react-vis": "^1.11.7",
-    "serialize-javascript": "^3.1.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "license": "MIT"
+	"name": "Colin-Harfst-Personal-Website",
+	"version": "1.0.0",
+	"private": true,
+	"proxy": "http://localhost:5000/",
+	"dependencies": {
+		"@material-ui/core": "^4.11.2",
+		"@material-ui/icons": "^4.11.2",
+		"chess.js": "^0.10.3",
+		"chessboardjsx": "^2.4.2",
+		"node-sass": "^4.13.1",
+		"react": "^16.14.0",
+		"react-dom": "^16.14.0",
+		"react-router-dom": "^5.2.0",
+		"react-scripts": "^3.4.4",
+		"react-vis": "^1.11.7",
+		"serialize-javascript": "^3.1.0"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"license": "MIT",
+	"engines": {
+		"node": "14.16.0",
+		"npm": "6.14.11"
+	}
 }
