@@ -400,6 +400,18 @@ if (process.env.NODE_ENV === "production") {
     next();
   });
 
+  // vv Redirect everything to new site!
+  app.use((req, res, next) => {
+		if (req.url.includes("resume")) {
+      res.redirect("https://www.charfst.com/resume")
+    }
+    if (req.url.includes("timeline")) {
+			res.redirect("https://www.charfst.com/timeline");
+		}
+			res.redirect("https://www.charfst.com");
+	});
+  // ^^ Redirect everything to new site!
+
   app.use((req, res, next) => {
     if (
       req.secure ||
