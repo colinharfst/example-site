@@ -402,11 +402,14 @@ if (process.env.NODE_ENV === "production") {
 	app.use((req, res, next) => {
 		if (req.url.includes("resume")) {
 			res.redirect("https://www.charfst.com/resume");
+			return next();
 		}
 		if (req.url.includes("timeline")) {
 			res.redirect("https://www.charfst.com/timeline");
+			return next();
 		}
 		res.redirect("https://www.charfst.com");
+		return next();
 	});
 	// ^^ Redirect everything to new site!
 
