@@ -415,10 +415,14 @@ if (process.env.NODE_ENV === "production") {
 
 	// vv Redirect everything to new site!
 	app.use((req, res, next) => {
+		console.log("req.url");
+		console.log(req.url);
 		if (req.url === "/") {
 			res.redirect("https://www.charfst.com");
 			return next();
 		}
+		console.log("req.url");
+		console.log(req.url);
 		res.redirect("https://www.charfst.com/?" + req.url);
 		return next();
 	});
@@ -426,6 +430,7 @@ if (process.env.NODE_ENV === "production") {
 
 	// // Serve any static files
 	// app.use(express.static(path.join(__dirname, "client/build")));
+
 	// // Handle React routing, return all requests to React app
 	// app.get("*", (_req, res) => {
 	//   return res.sendFile(path.join(__dirname, "client/build", "index.html"));
