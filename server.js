@@ -401,11 +401,11 @@ if (process.env.NODE_ENV === "production") {
 	// vv Redirect everything to new site!
 	app.use((req, res, next) => {
 		if (req.url.includes("resume")) {
-			res.redirect("https://www.charfst.com/resume");
+			res.redirect("https://www.charfst.com/?/resume");
 			return next();
 		}
 		if (req.url.includes("timeline")) {
-			res.redirect("https://www.charfst.com/timeline");
+			res.redirect("https://www.charfst.com/?/timeline");
 			return next();
 		}
 		res.redirect("https://www.charfst.com");
