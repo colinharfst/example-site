@@ -414,18 +414,15 @@ if (process.env.NODE_ENV === "production") {
 	// });
 
 	// vv Redirect everything to new site!
-	app.use((req, res, next) => {
-		if (req.url.includes("/favicon") || req.url.includes("/manifest") || req.url.includes("/static")) {
-			return next();
+	app.get("*", (req, res) => {
+		if (!(req.url.includes("/favicon") || req.url.includes("/manifest") || req.url.includes("/static"))) {
+			if (req.url === "/") {
+				res.redirect("https://www.charfst.com");
+				return;
+			}
+			res.redirect("https://www.charfst.com/?" + req.url);
+			return;
 		}
-		if (req.url === "/") {
-			res.redirect("https://www.charfst.com");
-			return next();
-		}
-		console.log("req.url");
-		console.log(req.url);
-		res.redirect("https://www.charfst.com/?" + req.url);
-		return next();
 	});
 	// ^^ Redirect everything to new site!
 
