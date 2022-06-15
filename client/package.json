@@ -8,7 +8,7 @@
 		"@material-ui/icons": "^4.11.2",
 		"chess.js": "^0.10.3",
 		"chessboardjsx": "^2.4.2",
-		"node-sass": "^4.13.1",
+		"node-sass": "^7.0.0",
 		"react": "^16.14.0",
 		"react-dom": "^16.14.0",
 		"react-router-dom": "^5.2.0",
