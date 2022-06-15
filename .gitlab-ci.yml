@@ -4,7 +4,6 @@ stages:
   - production
 
 production:
-  type: deploy
   stage: production
   image: ruby:latest
   script:
