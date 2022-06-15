@@ -415,8 +415,9 @@ if (process.env.NODE_ENV === "production") {
 
 	// vv Redirect everything to new site!
 	app.use((req, res, next) => {
-		console.log("req.url");
-		console.log(req.url);
+		if (req.url.includes("/favicon") || req.url.includes("/manifest") || req.url.includes("/static")) {
+			return next();
+		}
 		if (req.url === "/") {
 			res.redirect("https://www.charfst.com");
 			return next();
